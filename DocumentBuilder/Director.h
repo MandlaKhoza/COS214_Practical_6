@@ -3,16 +3,19 @@
 
 #include <string>
 #include <vector>
+#include <memory>
+
+#include "Builder.h"
+#include "Document.h"
 
 class Director {
 private:
-  DocumentBuilder *builder;
-  vector<string> commonFields;
-  vector<Comparable *> comparableFields;
+  Builder *builder;
+  std::vector<std::string> commonFields;
+  std::vector<std::shared_ptr<Comparable>> comparableFields;
 
 public:
-  Director(DocumentBuilder *builder, vector<string> commonFields,
-           vector<Comparable *> comparableFields);
+  Director(Builder *builder, std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields);
   Document *construct();
 };
 #endif // DIRECTOR_H
