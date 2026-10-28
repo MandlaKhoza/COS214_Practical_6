@@ -11,7 +11,7 @@ private:
   std::map<std::string, double> comparable;
 
 public:
-  Document();
+  Document() = default;
   void setDocument(std::map<std::string, std::string> common,
                    std::map<std::string, double> comparable);
   std::map<std::string, std::string> getCommon();
