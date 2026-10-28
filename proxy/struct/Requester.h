@@ -13,8 +13,8 @@ struct Requester
         UserRole role;
 
         //functions
-        Requester(): userId(), role(UserRole::Client){}
-        Requester(const std::string& uId, const UserRole  r): userId(uId), role(r){}
+        Requester(): userId(), role(UserRole::Client) {}
+        Requester(const std::string& uId, const UserRole  r) : userId(uId), role(r){}
 
          
 };
