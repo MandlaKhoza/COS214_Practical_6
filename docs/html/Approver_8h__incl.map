@@ -1,0 +1,21 @@
+<map id="CoR2/inc/Approver.h" name="CoR2/inc/Approver.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="83,5,237,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,225,64,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,33,74,51,57,64,44,80,30,113,25,148,27,183,31,212,26,212,21,183,20,148,25,111,39,77,54,60,71,47,110,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="53,79,131,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="151,33,115,70,111,67,147,29"/>
+<area shape="rect" id="Node000004" href="$ApprovalRequest_8h.html" title=" " alt="" coords="155,79,301,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="173,29,209,67,205,70,169,33"/>
+<area shape="rect" id="Node000006" href="$ApprovalDecision_8h.html" title=" " alt="" coords="261,225,409,251"/>
+<area shape="poly" id="edge11_Node000001_Node000006" title=" " alt="" coords="237,21,308,32,385,55,423,72,458,93,490,119,517,151,524,166,523,180,516,192,503,203,466,218,423,229,422,223,465,213,500,198,512,189,518,179,519,167,512,153,486,123,455,97,420,77,383,60,306,38,236,26"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="156,105,106,123,82,137,62,154,46,182,39,212,34,211,41,180,58,150,79,132,103,118,154,100"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="73,152,135,177"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="209,106,137,147,135,143,207,102"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="253,102,283,122,312,150,326,181,334,211,329,213,321,183,307,154,280,126,250,106"/>
+<area shape="rect" id="Node000007" href="$ApprovalRecord_8h.html" title=" " alt="" coords="159,152,297,177"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="231,104,231,138,225,138,225,104"/>
+<area shape="rect" id="Node000008" href="$ApprovalPolicy_8h.html" title=" " alt="" coords="373,152,502,177"/>
+<area shape="poly" id="edge10_Node000004_Node000008" title=" " alt="" coords="262,101,391,145,389,150,261,107"/>
+<area shape="poly" id="edge8_Node000007_Node000002" title=" " alt="" coords="198,180,78,224,76,219,196,175"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="247,175,307,215,304,220,244,180"/>
+</map>
