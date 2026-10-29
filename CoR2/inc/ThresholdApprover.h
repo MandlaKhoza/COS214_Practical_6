@@ -1,7 +1,6 @@
 #ifndef THRESHOLDAPPROVER_H
 #define THRESHOLDAPPROVER_H
 
-/// @see Approver.h
 #include "Approver.h"
 
 /**
@@ -26,7 +25,7 @@ class ThresholdApprover : public Approver
          * @param vF Name of the document field whose number is compared against the limit
          * @param auth The maximum value this approver may approve; anything above it is escalated
          */
-        ThresholdApprover(const std::string& n, const std::string r, std::string& vF, double auth);
+        ThresholdApprover(const std::string& n, const std::string& r, const std::string& vF, double auth);
 
     protected:
     /**
