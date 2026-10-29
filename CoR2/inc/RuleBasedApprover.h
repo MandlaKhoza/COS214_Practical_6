@@ -23,7 +23,7 @@ class RuleBasedApprover : public Approver
          * @param ro role of approver
          * @param ru rule that the approver uses to handle a request
          */
-        RuleBasedApprover(std::string& n, std::string& ro, std::function<ApprovalDecision(const ApprovalRequest&)> ru);
+        RuleBasedApprover(const std::string& n, const std::string& ro, std::function<ApprovalDecision(const ApprovalRequest&)> ru);
 
     protected:
     /**
