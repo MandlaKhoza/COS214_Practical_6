@@ -20,10 +20,11 @@ struct ApprovalRequest
     std::string decidedBy;
 
     //functions
-    ApprovalRequest(const WorkflowInstance* wi):
-        instance(wi), records(), policy(), finalDecision(ApprovalDecision::Rejected), decidedBy(){}
+    ApprovalRequest(const WorkflowInstance* wi, ApprovalPolicy p):
+        instance(wi), records(), policy(p), finalDecision(ApprovalDecision::Rejected), decidedBy(){}
 
-    ApprovalRequest(const WorkflowInstance* wi, std::vector<ApprovalRecord> r, ApprovalPolicy p, ApprovalDecision fD, std::string dB):
+    ApprovalRequest(const WorkflowInstance* wi, const std::vector<ApprovalRecord>& r, ApprovalPolicy p, 
+        ApprovalDecision fD, const std::string& dB):
         instance(wi), records(r), policy(p), finalDecision(fD), decidedBy(dB){}
 
 
