@@ -10,7 +10,7 @@ struct NodeResult;
 
 class RangeCheckNode : public WorkflowNode {
 private:
-    std::vector<Comparable> rules;
+    std::vector<std::shared_ptr<Comparable>> rules;
 
 protected:
     NodeResult process(WorkflowInstance& instance) override;

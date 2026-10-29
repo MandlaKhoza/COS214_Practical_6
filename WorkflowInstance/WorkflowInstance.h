@@ -4,12 +4,28 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <stdexcept>
 
 class Document;
-class WorkflowNode;
-struct HistoryEntry;
-#include "WorkflowStatus.h"
-#include "HistoryEntry.h"
+
+#include "WorkflowNode.h"
+#include "NodeResult.h"
+
+//History "nodes"
+struct HistoryEntry{
+    std::string timestamp;
+    std::string nodeName;
+    std::string stateName;
+    std::string message;
+};
+
+//Workflow status enum
+enum WorkflowStatus {
+    Created,
+    Running,
+    Rejected,
+    Cancelled
+};
 
 class WorkflowInstance {
 private:
@@ -26,8 +42,9 @@ public:
                      std::shared_ptr<Document> document);
     ~WorkflowInstance();
 
-    Document& getDocument() const;
+    std::shared_ptr<Document> getDocument() const;
     void setChain(std::unique_ptr<WorkflowNode> chain);
+    WorkflowNode* getChain() const;
     void run();
     void resume();
     void reset();
