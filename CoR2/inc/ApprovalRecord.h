@@ -14,7 +14,7 @@ struct ApprovalRecord
     std::string comment;
 
     //functions
-    ApprovalRecord():approverName(), role(), decision(ApprovalDecision::Approved), comment(){}
+    ApprovalRecord():approverName(), role(), decision(ApprovalDecision::Rejected), comment(){}
     ApprovalRecord(std::string aN, std::string r, ApprovalDecision d, std::string c): 
         approverName(aN), role(r), decision(d), comment(c){}
     
