@@ -10,7 +10,7 @@ class ThresholdApprover : public Approver
 {
     //members
     private:
-        /// @brief Name of the document field to compare, e.g. FieldNames::LOAN_AMOUNT
+        /// @brief Name of the document field to compare,
         std::string valueField;
 
         /// @brief The largest value this approver may approve on their own authority
