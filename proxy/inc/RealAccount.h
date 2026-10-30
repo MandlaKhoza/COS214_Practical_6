@@ -34,7 +34,7 @@ class RealAccount : public AccountView
         * @param a      The account to view; must outlive this object.
         * @param notes  Internal notes shown only to staff.
         */
-        RealAccount(const Account* a, std::vector<std::string>& n);
+        RealAccount(const Account* a, const std::vector<std::string>& n);
 
         /**
         * @brief Shows the full account details.
