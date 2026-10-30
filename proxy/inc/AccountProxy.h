@@ -49,7 +49,7 @@ class AccountProxy : public AccountView
         * @param req  Who is asking.
         * @param l    Log that records the attempt.
         */
-        AccountProxy(std::shared_ptr<AccountRegistry>& r, std::string& aN, const Requester& req, const std::shared_ptr<AccessLog>& l);
+        AccountProxy(const std::shared_ptr<AccountRegistry>& r, const std::string& aN, const Requester& req, const std::shared_ptr<AccessLog>& l);
 
         /**
         * @brief Shows the account according to the requester's access level.
