@@ -4,10 +4,10 @@
 #include <memory>
 #include <string>
 
+#include "NodeResult.h"
+
 class WorkflowInstance;
 class NodeState;
-struct HandleResult;
-struct NodeResult;
 
 class WorkflowNode {
 private:
@@ -17,25 +17,20 @@ private:
 
 protected:
     virtual NodeResult process(WorkflowInstance& instance) = 0;
-    virtual bool validateInput(const WorkflowInstance& instance,
-                               const std::string& reason) = 0;
-    virtual void recordHistory(WorkflowInstance& instance,
-                              const NodeResult& result) = 0;
+    virtual bool validateInput(WorkflowInstance& instance, std::string reason) = 0;
+    virtual void recordHistory(WorkflowInstance& instance, NodeResult result) = 0;
     void setState(std::unique_ptr<NodeState> state);
 
 public:
-    explicit WorkflowNode(const std::string& name);
-    virtual ~WorkflowNode();
-
-    WorkflowNode(const WorkflowNode&) = delete;
-    WorkflowNode& operator=(const WorkflowNode&) = delete;
+    WorkflowNode(std::string name);
+    virtual ~WorkflowNode() = default;
 
     void setNext(std::unique_ptr<WorkflowNode> next);
-    const std::string& getName() const;
-    WorkflowNode* getNext() const;
+    std::string getName();
+    WorkflowNode* getNext();
     HandleResult handle(WorkflowInstance& instance);
-    NodeState* getState() const;
-    const std::string& getStateName() const;
+    NodeState* getState();
+    std::string getStateName();
 
     virtual void start();
     virtual void pass();
@@ -48,8 +43,8 @@ public:
     virtual void reset();
     virtual void resetChain();
 
-    virtual std::unique_ptr<WorkflowNode> clone() const = 0;
-    std::unique_ptr<WorkflowNode> cloneChain() const;
+    virtual std::unique_ptr<WorkflowNode> clone() = 0;
+    std::unique_ptr<WorkflowNode> cloneChain();
 };
 
 #endif

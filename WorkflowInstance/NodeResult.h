@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum Result {
+enum HandleResult {
     PASSED,
     REJECTED,
     PENDING,
@@ -12,7 +12,7 @@ enum Result {
 };
 
 struct NodeResult {
-        Result result;
+        HandleResult result;
         std::string name;
 };
 
