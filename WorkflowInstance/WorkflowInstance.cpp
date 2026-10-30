@@ -20,12 +20,14 @@ WorkflowNode* WorkflowInstance::getChain() const{
 }
 
 void WorkflowInstance::run(){
-    HandleResult result = this->chain->handle(this);
-    //Principle, this is how it will "look like"
+  HandleResult result; //TODO double check
+  result = this->chain->handle(this);
 }
 
 void WorkflowInstance::resume(){
 //Most likely does the same as run
+  HandleResult result;
+  result = this->chain->handle(this);
 }
 
 void WorkflowInstance::reset(){
@@ -62,19 +64,25 @@ const std::vector<HistoryEntry>& WorkflowInstance::getHistory() const{
 }
 
 void WorkflowInstance::complete(){
- //TODO
+  this->status = WorkflowStatus::Approved; //There is no completed, this is the closest
 }
 
 void WorkflowInstance::cancel(){
- //TODO
+  this->status = WorkflowStatus::Cancelled;
 }
 
 bool WorkflowInstance::isFinished() const{
- //TODO
+  if(this->status == WorkflowStatus::Approved || this->status == WorkflowStatus::Rejected){
+    return true;
+  } 
+  return false;
 }
 
 bool WorkflowInstance::isCancelled() const{
- //TODO
+  if(this->status == WorkflowStatus::Cancelled){
+    return true;
+  }
+  return false;
 }
 
 void WorkflowInstance::rejectNodeName(const std::string& nodeName){
@@ -82,9 +90,9 @@ void WorkflowInstance::rejectNodeName(const std::string& nodeName){
 }
 
 void WorkflowInstance::markRunning(){
- //TODO
+  this->status = WorkflowStatus::Running;
 }
 
 const std::string& WorkflowInstance::getRejectedAt() const{
- //TODO
+  return this->id; //Call if you know if you want to know where it rejected
 }

@@ -23,6 +23,7 @@ struct HistoryEntry{
 enum WorkflowStatus {
     Created,
     Running,
+    Approved,
     Rejected,
     Cancelled
 };
