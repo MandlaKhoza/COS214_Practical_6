@@ -17,7 +17,7 @@ public:
     std::string getWorkflowType() const;
     std::string getOwnerId() const;
     std::string getCreatedAt() const;
-    virtual std::string describe() const = 0;
+    virtual std::string describe() const;
     virtual std::map<std::string, std::string> getDetails() const = 0;
 };
 

@@ -10,7 +10,10 @@ private:
     std::string programme;
 
 public:
-    std::string describe() const override;
+StudentAccount(std::string number, std::string type, std::string ownerId, std::string createdAt,
+    std::string studentNumber, std::string faculty, std::string programme);
+    
+    std::string describe() const;
     std::map<std::string, std::string> getDetails() const override;
 };
 

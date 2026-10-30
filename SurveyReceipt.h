@@ -9,7 +9,9 @@ private:
     double summaryScore;
 
 public:
-    std::string describe() const override;
+SurveyReceipt(std::string number, std::string type, std::string ownerId, std::string createdAt,
+     std::string responseId, double summaryScore);
+    std::string describe() const;
     std::map<std::string, std::string> getDetails() const override;
 };
 

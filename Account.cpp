@@ -19,3 +19,12 @@ std::string Account::getCreatedAt() const{
     return createdAt;
 }
 
+
+std::string Account::describe() const{
+    std::stringstream ss;
+    ss << "Tividy Account Number: " << accountNumber << "\n";
+    ss << "Owner ID number: " << ownerId << "\n";
+    ss << "Created at: " << createdAt << "\n";
+    ss << "Type of workflow: " << workflowType << "\n";
+    return ss.str();
+}

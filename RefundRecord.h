@@ -3,14 +3,16 @@
 
 #include "Account.h"
 
-class RefundRecord : public Account {
+class RefundRecord : public Account{
 private:
     std::string orderNumber;
     double amount;
     std::string payoutMethod;
 
 public:
-    std::string describe() const override;
+RefundRecord(std::string number, std::string type, std::string ownerId, std::string createdAt,
+    std::string orderNumber, double amount, std::string payoutMethod);
+    std::string describe() const ;
     std::map<std::string, std::string> getDetails() const override;
 };
 

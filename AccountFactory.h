@@ -5,6 +5,7 @@
 #include "Account.h"
 
 class WorkflowInstance; 
+class Document;
 
 class AccountFactory{
 protected:

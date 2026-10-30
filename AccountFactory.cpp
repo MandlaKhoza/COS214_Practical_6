@@ -1,5 +1,6 @@
 #include "AccountFactory.h"
 
+
 /**
  * @brief Constructor of  AccountFactories.
  *
@@ -52,14 +53,13 @@ std::string AccountFactory::nextAccountNumber(){
  * @param w The workflow instance whose document contains the owner's ID.
  * @return The owner's ID if the field is found or an empty string if it is missing or not filled      
  */
-
 std::string AccountFactory::getOwnerId(const WorkflowInstance& w) const{
     std::string id;
 
-    bool found = w.getDocument().getField(ownerField, id);
+    const Document& d = w.getDocument();
+    bool found = d.getField(ownerField, id);
     if(found == false){
         return "";
     }
     return id;
 }
-

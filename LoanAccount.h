@@ -12,7 +12,9 @@ private:
     double outstanding;
 
 public:
-    std::string describe() const override;
+LoanAccount(std::string number, std::string type, std::string ownerId, std::string createdAt,
+    double principal, double interestRate, int termMonths, double monthlyInstalment, double outstanding);
+    std::string describe() const;
     std::map<std::string, std::string> getDetails() const override;
 };
 

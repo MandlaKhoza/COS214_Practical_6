@@ -10,7 +10,9 @@ private:
     std::string systemAccess;
 
 public:
-    std::string describe() const override;
+EmployeeAccount(std::string number, std::string type, std::string ownerId, std::string createdAt,
+    std::string employeeNumber, std::string department, std::string systemAccess);
+    std::string describe() const;
     std::map<std::string, std::string> getDetails() const override;
 };
 
