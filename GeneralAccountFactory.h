@@ -2,6 +2,7 @@
 #define GENERALACCOUNTFACTORY_H
 
 #include "AccountFactory.h"
+#include "TimeStamp.h"
 
 class GeneralAccountFactory : public AccountFactory{
 public:

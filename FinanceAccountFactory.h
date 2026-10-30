@@ -2,6 +2,8 @@
 #define FINANCEACCOUNTFACTORY_H
 
 #include "AccountFactory.h"
+#include "TimeStamp.h"
+
 
 class FinanceAccountFactory : public AccountFactory{
 public:

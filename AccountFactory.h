@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include "Account.h"
+#include "TimeStamp.h"
 
 class WorkflowInstance; 
 class Document;
