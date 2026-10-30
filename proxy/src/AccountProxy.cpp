@@ -1,5 +1,8 @@
 #include "AccountProxy.h"
 #include "Account.h"
+#include "AccountRegistry.h"
+
+
 
 AccountProxy::AccountProxy(const std::shared_ptr<AccountRegistry>& r, const std::string& aN, const Requester& req, 
     const std::shared_ptr<AccessLog>& l) : registry(r), accountNumber(aN), requester(req), log(l), real(nullptr)
@@ -9,22 +12,22 @@ AccountProxy::AccountProxy(const std::shared_ptr<AccountRegistry>& r, const std:
 
 AccessLevel AccountProxy::determineAccess() const
 {
-    Account a = registry->find(accountNumber);
+    const Account* a = registry->find(accountNumber);
 
     if(a == nullptr)
     {
         return AccessLevel::Denied;
     }
-    else if(a.getUserRole() == Staff)
+    else if(requester.role == Staff)
     {
         return AccessLevel::FullWithNotes;
     }
-    else if(a.getUserRole() == Auditor)
+    else if(requester.role == Auditor)
     {
         return AccessLevel::Summary;
     }
 
-    if ((a.getUserId() != nullptr)&&(a.getUserId == accountNumber.getUserId()))
+    if ((requester.userId != nullptr)&&(a->getUserId == requester.userId))
     {
         return AccessLevel::Full;
     }
@@ -34,23 +37,60 @@ AccessLevel AccountProxy::determineAccess() const
 
 RealAccount& AccountProxy::loadReal() const
 {
-    if (real == nullptr)
+    if (!real)
     {
+        const Account* a = registry->find(accountNumber);
 
+        real.reset(new RealAccount(a, std::vector<std::string>()));
     }
+
+    return real*;
 }
 
 std::string AccountProxy::display() const 
 {
+    AccessLevel level = determineAccess();
+    log->record(requester, accountNumber, level);   
 
+    switch (level)
+    {
+        case AccessLevel::Full:
+            return loadReal().display();
+
+        case AccessLevel::FullWithNotes:
+        {
+            RealAccount& r = loadReal();
+            std::string result = r.display() + "\n\nInternal notes:";
+            const std::vector<std::string>& notes = r.getInternalNotes();
+            for (std::size_t i = 0; i < notes.size(); i++)
+            {
+                result += "\n- " + notes[i];
+            }
+            return result;
+        }
+
+        case AccessLevel::Summary:
+        {
+            RealAccount& r = loadReal();
+            return r.displaySummary() + "\nOwner ID: " + maskId(r.getOwnerId());
+        }
+
+        case AccessLevel::Denied:
+            break;
+    }
+    return "Access denied";
 }
 
-static std::string AccountProxy::maskId(const std::string& id)
+std::string AccountProxy::maskId(const std::string& id)
 {
-
+    f (id.size() <= 4)
+    {
+        return std::string(id.size(), '*');   
+    }
+    return std::string(id.size() - 4, '*') + id.substr(id.size() - 4);
 }
 
-std::string getAccountNumber() const
+std::string AccountProxy::getAccountNumber() const
 {
     return accountNumber;
 }
