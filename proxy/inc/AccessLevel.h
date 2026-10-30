@@ -9,13 +9,13 @@ enum class AccessLevel
     /// @brief User does not have access
     Denied,
 
-    /// @brief user is allowed to view only a summary of the account (staff)
+    /// @brief user is allowed to view only a summary of the account (auditor)
     Summary,
 
     /// @brief user is allowed to view the full account (client who owns the account)
     Full,
 
-    /// @brief User is allowed to view the full account, with additional notes (Auditor)
+    /// @brief User is allowed to view the full account, with additional notes (staff)
     FullWithNotes
 };
 
