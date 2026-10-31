@@ -60,7 +60,6 @@ if(EXISTS ${NODE_DIR}/WorkflowNode.cpp AND EXISTS ${STATE_DIR}/NodeState.cpp)
     )
     target_include_directories(team PUBLIC ${NODE_DIR} ${STATE_DIR})
 
-    # AppealCommand is added once the Builder has AnswerDocumentBuilder.
     add_library(commands
         src/ResetNodeCommand.cpp
         src/ResetWorkflowCommand.cpp
