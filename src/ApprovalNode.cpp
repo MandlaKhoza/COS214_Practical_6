@@ -38,10 +38,9 @@ NodeResult ApprovalNode::process(WorkflowInstance& wi)
     // Fail-safe: no chain configured means nobody can approve
     if (!approvals)
     {
-        return NodeResult(HandleResult::Rejected, "No approval chain configured");
+        return NodeResult{HandleResult::REJECTED, "No approval chain configured"};
     }
 
-    // Run the instance through CoR2
     ApprovalRequest request = approvals->submit(wi);
 
     // Copy every approver's record into the instance history
@@ -50,15 +49,15 @@ NodeResult ApprovalNode::process(WorkflowInstance& wi)
         wi.addHistory(request.records[i].approverName, request.records[i].comment);
     }
 
-    // finalDecision is only ever Approved or Rejected; anything else is a rejection
+    // finalDecision is only ever Approved or Rejected
     if (request.finalDecision == ApprovalDecision::Approved)
     {
-        return NodeResult(HandleResult::Passed, "Approved by " + request.decidedBy);
+        return NodeResult{HandleResult::PASSED, "Approved by " + request.decidedBy};
     }
 
     if (request.decidedBy.empty())
     {
-        return NodeResult(HandleResult::Rejected, "Rejected: no approver decided");
+        return NodeResult{HandleResult::REJECTED, "Rejected: no approver decided"};
     }
-    return NodeResult(HandleResult::Rejected, "Rejected by " + request.decidedBy);
+    return NodeResult{HandleResult::REJECTED, "Rejected by " + request.decidedBy};
 }
