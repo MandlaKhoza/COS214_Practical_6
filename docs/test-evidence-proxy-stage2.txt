@@ -1,0 +1,66 @@
+Internal ctest changing into directory: /home/zeeli/COS214/Pracs/Project/COS214_Practical_6/build
+Test project /home/zeeli/COS214/Pracs/Project/COS214_Practical_6/build
+      Start  1: AccessLogTest.NewLogIsEmpty
+ 1/30 Test  #1: AccessLogTest.NewLogIsEmpty .........................................   Passed    0.00 sec
+      Start  2: AccessLogTest.RecordStoresAttemptCorrectly
+ 2/30 Test  #2: AccessLogTest.RecordStoresAttemptCorrectly ..........................   Passed    0.00 sec
+      Start  3: AccessLogTest.GetDeniedOnEmptyLogIsEmpty
+ 3/30 Test  #3: AccessLogTest.GetDeniedOnEmptyLogIsEmpty ............................   Passed    0.00 sec
+      Start  4: AccessLogTest.GetDeniedReturnsOnlyDeniedAttempts
+ 4/30 Test  #4: AccessLogTest.GetDeniedReturnsOnlyDeniedAttempts ....................   Passed    0.00 sec
+      Start  5: AccessLogTest.GetDeniedWithNoDeniedAttemptsIsEmpty
+ 5/30 Test  #5: AccessLogTest.GetDeniedWithNoDeniedAttemptsIsEmpty ..................   Passed    0.00 sec
+      Start  6: AccessLogTest.GetDeniedLeavesLogUnchanged
+ 6/30 Test  #6: AccessLogTest.GetDeniedLeavesLogUnchanged ...........................   Passed    0.00 sec
+      Start  7: AccessLogTest.AttemptsKeepTheOrderTheyWereRecorded
+ 7/30 Test  #7: AccessLogTest.AttemptsKeepTheOrderTheyWereRecorded ..................   Passed    0.00 sec
+      Start  8: RequesterTest.DefaultHasEmptyIdAndLeastPrivilegedRole
+ 8/30 Test  #8: RequesterTest.DefaultHasEmptyIdAndLeastPrivilegedRole ...............   Passed    0.00 sec
+      Start  9: RequesterTest.ConstructorStoresIdAndRole
+ 9/30 Test  #9: RequesterTest.ConstructorStoresIdAndRole ............................   Passed    0.00 sec
+      Start 10: AccessAttemptTest.DefaultLevelIsDenied
+10/30 Test #10: AccessAttemptTest.DefaultLevelIsDenied ..............................   Passed    0.00 sec
+      Start 11: AccessAttemptTest.ConstructorStoresAllFields
+11/30 Test #11: AccessAttemptTest.ConstructorStoresAllFields ........................   Passed    0.00 sec
+      Start 12: AccountProxyTest.FixtureBuildsAndRegistryFindsStub
+12/30 Test #12: AccountProxyTest.FixtureBuildsAndRegistryFindsStub ..................   Passed    0.00 sec
+      Start 13: AccountProxyTest.OwnerSeesFullDetails
+13/30 Test #13: AccountProxyTest.OwnerSeesFullDetails ...............................   Passed    0.00 sec
+      Start 14: AccountProxyTest.OwnerDoesNotSeeInternalNotes
+14/30 Test #14: AccountProxyTest.OwnerDoesNotSeeInternalNotes .......................   Passed    0.00 sec
+      Start 15: AccountProxyTest.OtherClientIsDenied
+15/30 Test #15: AccountProxyTest.OtherClientIsDenied ................................   Passed    0.00 sec
+      Start 16: AccountProxyTest.EmptyIdClientIsDenied
+16/30 Test #16: AccountProxyTest.EmptyIdClientIsDenied ..............................   Passed    0.00 sec
+      Start 17: AccountProxyTest.EmptyIdClientIsDeniedEvenWhenAccountOwnerIsEmpty
+17/30 Test #17: AccountProxyTest.EmptyIdClientIsDeniedEvenWhenAccountOwnerIsEmpty ...   Passed    0.00 sec
+      Start 18: AccountProxyTest.StaffSeesDetailsAndInternalNotes
+18/30 Test #18: AccountProxyTest.StaffSeesDetailsAndInternalNotes ...................   Passed    0.00 sec
+      Start 19: AccountProxyTest.AuditorSeesSummaryWithMaskedId
+19/30 Test #19: AccountProxyTest.AuditorSeesSummaryWithMaskedId .....................   Passed    0.00 sec
+      Start 20: AccountProxyTest.AuditorSummaryHidesDetailsAndNotes
+20/30 Test #20: AccountProxyTest.AuditorSummaryHidesDetailsAndNotes .................   Passed    0.00 sec
+      Start 21: AccountProxyTest.FiveCharacterIdKeepsOnlyLastFour
+21/30 Test #21: AccountProxyTest.FiveCharacterIdKeepsOnlyLastFour ...................   Passed    0.00 sec
+      Start 22: AccountProxyTest.FourCharacterIdIsFullyMasked
+22/30 Test #22: AccountProxyTest.FourCharacterIdIsFullyMasked .......................   Passed    0.00 sec
+      Start 23: AccountProxyTest.UnknownAccountIsDeniedForClient
+23/30 Test #23: AccountProxyTest.UnknownAccountIsDeniedForClient ....................   Passed    0.00 sec
+      Start 24: AccountProxyTest.UnknownAccountIsDeniedEvenForStaff
+24/30 Test #24: AccountProxyTest.UnknownAccountIsDeniedEvenForStaff .................   Passed    0.00 sec
+      Start 25: AccountProxyTest.DisplayLogsExactlyOneAttemptWithTheLevel
+25/30 Test #25: AccountProxyTest.DisplayLogsExactlyOneAttemptWithTheLevel ...........   Passed    0.00 sec
+      Start 26: AccountProxyTest.DeniedAttemptIsLoggedAndAppearsInGetDenied
+26/30 Test #26: AccountProxyTest.DeniedAttemptIsLoggedAndAppearsInGetDenied .........   Passed    0.00 sec
+      Start 27: AccountProxyTest.SharedLogCollectsAttemptsFromTwoProxies
+27/30 Test #27: AccountProxyTest.SharedLogCollectsAttemptsFromTwoProxies ............   Passed    0.00 sec
+      Start 28: AccountProxyTest.DeniedRequestNeverTouchesTheAccount
+28/30 Test #28: AccountProxyTest.DeniedRequestNeverTouchesTheAccount ................   Passed    0.00 sec
+      Start 29: AccountProxyTest.UnknownAccountRequestNeverTouchesTheAccount
+29/30 Test #29: AccountProxyTest.UnknownAccountRequestNeverTouchesTheAccount ........   Passed    0.00 sec
+      Start 30: AccountProxyTest.GetAccountNumberReturnsTheRequestedNumber
+30/30 Test #30: AccountProxyTest.GetAccountNumberReturnsTheRequestedNumber ..........   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 30
+
+Total Test time (real) =   0.10 sec

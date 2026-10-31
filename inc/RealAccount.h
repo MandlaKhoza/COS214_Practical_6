@@ -64,7 +64,7 @@ class RealAccount : public AccountView
         * @brief Gets the id of the account's owner.
         * @return The owner's id, as stored in the account.
         */
-        const std::string& getOwnerId() const; 
+        const std::string getOwnerId() const; 
 
 };
 

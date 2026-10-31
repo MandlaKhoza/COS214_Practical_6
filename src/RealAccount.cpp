@@ -38,7 +38,7 @@ std::string RealAccount::getAccountNumber() const
     return account->getAccountNumber();
 }
 
-const std::string& RealAccount::getOwnerId() const
+const std::string RealAccount::getOwnerId() const
 {
     return account->getOwnerId();
 }

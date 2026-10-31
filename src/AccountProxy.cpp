@@ -18,16 +18,16 @@ AccessLevel AccountProxy::determineAccess() const
     {
         return AccessLevel::Denied;
     }
-    else if(requester.role == Staff)
+    else if(requester.role == UserRole::Staff)
     {
         return AccessLevel::FullWithNotes;
     }
-    else if(requester.role == Auditor)
+    else if(requester.role == UserRole::Auditor)
     {
         return AccessLevel::Summary;
     }
 
-    if ((requester.userId != nullptr)&&(a->getUserId == requester.userId))
+    if ((!requester.userId.empty())&&(a->getOwnerId() == requester.userId))
     {
         return AccessLevel::Full;
     }
@@ -44,7 +44,7 @@ RealAccount& AccountProxy::loadReal() const
         real.reset(new RealAccount(a, std::vector<std::string>()));
     }
 
-    return real*;
+    return *real;
 }
 
 std::string AccountProxy::display() const 
@@ -83,7 +83,7 @@ std::string AccountProxy::display() const
 
 std::string AccountProxy::maskId(const std::string& id)
 {
-    f (id.size() <= 4)
+    if (id.size() <= 4)
     {
         return std::string(id.size(), '*');   
     }

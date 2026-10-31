@@ -16,12 +16,18 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_library(tividy_proxy src/AccessLog.cpp)
+add_library(tividy_proxy
+    src/AccessLog.cpp
+    src/RealAccount.cpp
+    src/AccountProxy.cpp
+    src/Account.cpp
+    src/AccountRegistry.cpp)
 target_include_directories(tividy_proxy PUBLIC inc)
 
 add_executable(proxy_tests
     tests/proxy/AccessLogTest.cpp
-    tests/proxy/StructDefaultsTest.cpp)
+    tests/proxy/StructDefaultsTest.cpp
+    tests/proxy/AccountProxyTest.cpp)
 target_link_libraries(proxy_tests tividy_proxy gtest_main)
 
 include(GoogleTest)
