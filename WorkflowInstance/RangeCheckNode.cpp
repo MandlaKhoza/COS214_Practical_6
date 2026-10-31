@@ -38,5 +38,7 @@ NodeResult RangeCheckNode::process(WorkflowInstance& instance) {
 }
 
 std::unique_ptr<WorkflowNode> RangeCheckNode::clone() {
-    //TODO
+    std::string name = this->WorkflowNode::getName();
+
+    return std::unique_ptr<WorkflowNode>(new RangeCheckNode(name, rules));
 }
