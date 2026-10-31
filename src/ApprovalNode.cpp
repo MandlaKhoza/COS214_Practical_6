@@ -5,7 +5,6 @@
 #include "ApprovalRequest.h"
 #include "ApprovalDecision.h"
 
-#include <stdexcept>
 
 /**
  * @brief Constructs an approval node.
@@ -33,45 +32,33 @@ std::unique_ptr<WorkflowNode> ApprovalNode::clone() const {
     );
 }
 
-/**
- * @brief Processes the approval request.
- *
- * Submits the workflow instance to CHOR2 and converts
- * the resulting ApprovalDecision into a NodeResult.
- *
- * @param wi The workflow instance being processed.
- * @return NodeResult containing the outcome and history message.
- * @throws std::logic_error If no approval chain is assigned.
- */
-NodeResult ApprovalNode::process(WorkflowInstance& wi) {
-    if (!approvals) {
-        throw std::logic_error("ApprovalNode has no ApprovalChain");
+
+NodeResult ApprovalNode::process(WorkflowInstance& wi)
+{
+    // Fail-safe: no chain configured means nobody can approve
+    if (!approvals)
+    {
+        return NodeResult(HandleResult::Rejected, "No approval chain configured");
     }
 
-    // Submit the workflow to the approval chain.
+    // Run the instance through CoR2
     ApprovalRequest request = approvals->submit(wi);
 
-    
-    switch (request.finalDecision) {
-
-        case ApprovalDecision::Approved: //decision approved 
-            return NodeResult{
-                HandleResult::Passed,
-                "Approved by " + request.decidedBy
-            };
-
-        case ApprovalDecision::Rejected: //decision rejected
-            return NodeResult{
-                HandleResult::Rejected,
-                "Rejected by " + request.decidedBy
-            };
-
-        case ApprovalDecision::Escalate: //de
-            return NodeResult{
-                HandleResult::Pending,
-                "Awaiting approval"
-            };
+    // Copy every approver's record into the instance history
+    for (std::size_t i = 0; i < request.records.size(); i++)
+    {
+        wi.addHistory(request.records[i].approverName, request.records[i].comment);
     }
 
-    throw std::logic_error("Unknown approval decision");
+    // finalDecision is only ever Approved or Rejected; anything else is a rejection
+    if (request.finalDecision == ApprovalDecision::Approved)
+    {
+        return NodeResult(HandleResult::Passed, "Approved by " + request.decidedBy);
+    }
+
+    if (request.decidedBy.empty())
+    {
+        return NodeResult(HandleResult::Rejected, "Rejected: no approver decided");
+    }
+    return NodeResult(HandleResult::Rejected, "Rejected by " + request.decidedBy);
 }

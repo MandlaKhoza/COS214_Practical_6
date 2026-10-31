@@ -47,17 +47,23 @@ ApprovalPolicy ApprovalChain::getPolicy() const {
  * @return The completed approval request containing the decision
  *         and approver records
  */
-ApprovalRequest ApprovalChain::submit(const WorkflowInstance& wi) {
-    ApprovalRequest request;
+ApprovalRequest ApprovalChain::submit(const WorkflowInstance& wi) const
+{
+    // The constructor already sets finalDecision to Rejected and decidedBy to empty
+    ApprovalRequest request(&wi, policy);
 
-    request.instance = &wi;
-    request.policy = policy;
-    request.finalDecision = ApprovalDecision::Escalate;
-    request.decidedBy = "";
-
-    // Start processing at the first approver
-    if (head) {
-        request.finalDecision = head->approve(request);
+    if (head)
+    {
+        // approve() fills in records, finalDecision and decidedBy
+        head->approve(request);
+    }
+    else
+    {
+        // No approvers: stay Rejected, but leave a record explaining why
+        request.records.push_back(
+            ApprovalRecord("ApprovalChain", "None", ApprovalDecision::Rejected,
+                           "No approvers configured"));
+        request.decidedBy = "ApprovalChain";
     }
 
     return request;
