@@ -1,5 +1,5 @@
-#include "inc/WorkflowDefinition.h"
-#include "inc/WorkflowNode.h"
+#include "../inc/WorkflowDefinition.h"
+#include "../inc/WorkflowNode.h"
 
 WorkflowDefinition::WorkflowDefinition(const std::string& workflowType)
     : workflowType(workflowType), head(nullptr) {}

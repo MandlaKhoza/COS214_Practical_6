@@ -8,11 +8,11 @@
 #include <utility>
 
 // Include paths
-#include "DocumentBuilder/Document.h"
-#include "WorkflowInstance/DocCompletionCheckNode.h"
-#include "WorkflowInstance/RangeCheckNode.h"
-#include "WorkflowInstance/WorkflowDefinition.h"
-#include "WorkflowInstance/WorkflowInstance.h"
+#include "DocumentBuilder/inc/Document.h"
+#include "WorkflowInstance/inc/DocCompletionCheckNode.h"
+#include "WorkflowInstance/inc/RangeCheckNode.h"
+#include "WorkflowInstance/inc/WorkflowDefinition.h"
+#include "WorkflowInstance/inc/WorkflowInstance.h"
 
 static std::string str(HandleResult r) {
     switch (r) {

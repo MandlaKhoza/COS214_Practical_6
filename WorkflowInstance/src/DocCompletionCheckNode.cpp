@@ -1,4 +1,4 @@
-#include "inc/DocCompletionCheckNode.h"
+#include "../inc/DocCompletionCheckNode.h"
 #include <cmath>
 DocCompletionCheckNode::DocCompletionCheckNode(std::string name) : WorkflowNode(name){}
 

@@ -36,7 +36,7 @@ public:
 
     virtual void start();
     virtual void pass();
-    virtual void needsApproval();
+    virtual void needsApproval(); // Ambigiuous / EXTRA Remove if unused
     virtual void approve();
     virtual void reject();
     virtual void fail();
@@ -46,7 +46,7 @@ public:
     virtual void resetChain();
 
     virtual std::unique_ptr<WorkflowNode> clone() = 0;
-    std::unique_ptr<WorkflowNode> cloneChain();
+    std::unique_ptr<WorkflowNode> cloneChain(); // What?
 };
 
 #endif

@@ -1,4 +1,4 @@
-#include "inc/WorkflowNode.h"
+#include "../inc/WorkflowNode.h"
 
 #include <iostream>
 
@@ -105,9 +105,12 @@ void WorkflowNode::reset() {
 }
 
 void WorkflowNode::resetChain() {
-    // TODO
+    this->reset();
+    this->next->resetChain();
 }
 
 std::unique_ptr<WorkflowNode> WorkflowNode::cloneChain() {
-    // TODO
+    std::unique_ptr<WorkflowNode> copy = clone();      // copy me
+    if (next) copy->setNext(next->cloneChain()); // copy the rest, attach it after me
+    return copy;
 }

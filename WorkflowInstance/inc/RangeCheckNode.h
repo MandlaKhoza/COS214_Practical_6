@@ -3,8 +3,8 @@
 
 #include "WorkflowNode.h"
 #include "WorkflowInstance.h"
-#include "../DocumentBuilder/Document.h"
-#include "../DocumentBuilder/Comparable.h"
+#include "../../DocumentBuilder/inc/Document.h"
+#include "../../DocumentBuilder/inc/Comparable.h"
 
 #include <vector>
 #include <map>

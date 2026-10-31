@@ -6,7 +6,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include "../DocumentBuilder/Document.h"
+#include "../../DocumentBuilder/inc/Document.h"
 #include "WorkflowNode.h"
 #include "NodeResult.h"
 
@@ -59,7 +59,7 @@ public:
     bool isFinished() const;
     bool isCancelled() const;
     void reject(const std::string& nodeName); // EXTRA : Remove if unused
-    void markRunning();
+    void markRunning(); // Remove if unused
     const std::string& getRejectedAt() const;
     const std::string& getType() const;
 };

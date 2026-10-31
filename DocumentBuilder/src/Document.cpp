@@ -1,4 +1,4 @@
-#include "inc/Document.h"
+#include "../inc/Document.h"
 
 void Document::setDocument(std::map<std::string, std::string> common, std::map<std::string, double> comparable) {
     this->common = common;
