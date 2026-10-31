@@ -1,35 +1,30 @@
 #include "DocCompletionCheckNode.h"
-
+#include <cmath>
 DocCompletionCheckNode::DocCompletionCheckNode(std::string name) : WorkflowNode(name){}
 
-NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi){
-  std::map<std::string,std::string> commonFields = wi.getDocument()->getCommon();
-  std::map<std::string, double> comparableFields = wi.getDocument()->getComparable();
+NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi) {
+    const auto& commonFields     = wi.getDocument()->getCommon();
+    const auto& comparableFields = wi.getDocument()->getComparable();
 
-  for (const auto& [key, value] : commonFields){
-    if(value.empty()){
-      NodeResult node;
-      node.name = "Document not completed ";
-      node.result = HandleResult::FAILED; // I don't know what the difference between failed and rejected is
-      return node;
+    for (const auto& [key, value] : commonFields) {
+        if (value.empty()) {
+            return NodeResult{
+                HandleResult::FAILED,
+                "Document not completed: empty field '" + key + "'"
+            };
+        }
     }
 
-  }
-
-  for (const auto& [key, value] : comparableFields){
-    if(value.empty()){
-      NodeResult node;
-      node.name = "Document not completed";
-      node.result = HandleResult::FAILED;
-
-      return node;
+    for (const auto& [key, value] : comparableFields) {
+        if (std::isnan(value)) {
+            return NodeResult{
+                HandleResult::FAILED,
+                "Document not completed: missing numeric field '" + key + "'"
+            };
+        }
     }
 
-  }
-  NodeResult node;
-  node.name = "Document is properly filled";
-  node.result = HandleResult::PASSED;
-  return node;
+    return NodeResult{ HandleResult::PASSED, "Document is properly filled" };
 }
 
 std::unique_ptr<WorkflowNode> DocCompletionCheckNode::clone(){
