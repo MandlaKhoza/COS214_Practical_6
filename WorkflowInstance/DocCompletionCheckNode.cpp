@@ -6,20 +6,20 @@ NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi) {
     const auto& commonFields     = wi.getDocument()->getCommon();
     const auto& comparableFields = wi.getDocument()->getComparable();
 
-    for (const auto& [key, value] : commonFields) {
-        if (value.empty()) {
+    for (const auto& field : commonFields) {
+        if (field.second.empty()) {
             return NodeResult{
                 HandleResult::FAILED,
-                "Document not completed: empty field '" + key + "'"
+                "Document not completed: empty field '" + field.first + "'"
             };
         }
     }
 
-    for (const auto& [key, value] : comparableFields) {
-        if (std::isnan(value)) {
+    for (const auto& field : comparableFields) {
+        if (std::isnan(field.second)) {
             return NodeResult{
                 HandleResult::FAILED,
-                "Document not completed: missing numeric field '" + key + "'"
+                "Document not completed: missing numeric field '" + field.first + "'"
             };
         }
     }

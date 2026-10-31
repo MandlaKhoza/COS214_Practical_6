@@ -1,11 +1,10 @@
 #include "WorkflowDefinition.h"
+#include "WorkflowNode.h"
 
 WorkflowDefinition::WorkflowDefinition(const std::string& workflowType)
     : workflowType(workflowType), head(nullptr) {}
 
-WorkflowDefinition::~WorkflowDefinition() {
-    // Clean up resources if necessary
-}
+WorkflowDefinition::~WorkflowDefinition() = default;
 
 void WorkflowDefinition::setHead(std::unique_ptr<WorkflowNode> node) {
     head = std::move(node);

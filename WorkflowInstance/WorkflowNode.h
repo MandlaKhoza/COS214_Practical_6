@@ -7,7 +7,11 @@
 #include "NodeResult.h"
 
 class WorkflowInstance;
-class NodeState;
+
+class NodeState {
+public:
+    virtual ~NodeState() = default;
+};
 
 class WorkflowNode {
 private:

@@ -59,48 +59,49 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
 }
 
 NodeState* WorkflowNode::getState() {
-    return this->state.get();
+    return nullptr;
+    //return this->state.get();
 }
 
 std::string WorkflowNode::getStateName() {
-    return this->state->getName();
+    return nullptr;
+    //return this->state->getName();
 }
 
-void WorkflowNode::start()
-{
-    this->state->start(this);
+void WorkflowNode::start() {
+    //this->state->start(this);
 }
 
 void WorkflowNode::pass() {
-    this->state->pass(this);
+    //this->state->pass(this);
 }
 
 void WorkflowNode::needsApproval() {
-    this->state->approve(this);
+    //this->state->approve(this);
 }
 
 void WorkflowNode::approve() {
-    this->state->approve(this);
+    //this->state->approve(this);
 }
 
 void WorkflowNode::reject() {
-    this->state->reject(this);
+    //this->state->reject(this);
 }
 
 void WorkflowNode::fail() {
-    this->state->fail(this);
+    //this->state->fail(this);
 }
 
 void WorkflowNode::retry() {
-    this->state->retry(this);
+    //this->state->retry(this);
 }
 
 void WorkflowNode::cancel() {
-    this->state->cancel(this);
+    //this->state->cancel(this);
 }
 
 void WorkflowNode::reset() {
-    this->state->reset(this);
+    //this->state->reset(this);
 }
 
 void WorkflowNode::resetChain() {

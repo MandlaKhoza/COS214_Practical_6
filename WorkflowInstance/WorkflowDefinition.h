@@ -15,9 +15,6 @@ public:
     explicit WorkflowDefinition(const std::string& workflowType);
     ~WorkflowDefinition();
 
-    WorkflowDefinition(const WorkflowDefinition&) = delete;
-    WorkflowDefinition& operator=(const WorkflowDefinition&) = delete;
-
     void setHead(std::unique_ptr<WorkflowNode> node);
     WorkflowNode* getHead() const;
     std::unique_ptr<WorkflowNode> createChain() const;
