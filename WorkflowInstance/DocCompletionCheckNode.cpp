@@ -1,7 +1,6 @@
 #include "DocCompletionCheckNode.h"
 
-DocCompletionCheckNode::DocCompletionCheckNode(std::string name){
-  WorkflowNode(name);
+DocCompletionCheckNode::DocCompletionCheckNode(std::string name):WorkflowNode(std::move(name)){
   //TODO, how to properly initialise a these concreteNodes
 }
 NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi){
@@ -37,6 +36,6 @@ NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi){
 std::unique_ptr<WorkflowNode> DocCompletionCheckNode::clone(){
   //DocCompletion doesn't really store anything, so cloning isn't really necessary
   //TODO fix clone
-  WorkflowNode node = new DocComplectionCheckNode("DocCompletionCheckNode");
+  WorkflowNode node = new DocCompletionCheckNode("DocCompletionCheckNode");
   return node;
 }
