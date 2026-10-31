@@ -31,11 +31,11 @@ CheckResult CreditCheckAdapter::run(const Document& doc) const {
 	//credit score good
 	if(score < minScore)
 		return CheckResult{false,
-							"Credit score" +  std::to_string(score) + " below minimum" + std::to_string(minScore), 
+							"Credit score " +  std::to_string(score) + " below minimum " + std::to_string(minScore), 
 							getName(), data};
 
 	return CheckResult{true,
-						"Credit score" +  std::to_string(score) + " meets minimum" + std::to_string(minScore), 
+						"Credit score " +  std::to_string(score) + " meets minimum " + std::to_string(minScore), 
 						getName(), data};
 }
 

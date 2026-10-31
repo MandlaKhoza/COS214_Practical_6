@@ -23,7 +23,7 @@ CheckResult QualificationAdapter::run(const Document& doc) const{
 		//get results of candidate
 	std::map<std::string, int> results = api->getResults(candidateNo);
 	if (results.empty())
-		return CheckResult{false, "No examm results found for candidate " + candidateNo, getName(), {}};
+		return CheckResult{false, "No exam results found for candidate " + candidateNo, getName(), {}};
 
 	std::map<std::string, std::string> data;
 	std::string shortfalls;

@@ -37,8 +37,8 @@ private:
 	std::shared_ptr<HomeAffairsService> service;
 	std::string nameField;
 	std::string surnameField;
-	std::string dobField;
 	std::string idField;
+	std::string dobField;
 
 public:
 	/**
