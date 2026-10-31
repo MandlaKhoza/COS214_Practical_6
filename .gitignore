@@ -12,3 +12,4 @@ tividy
 # Generated test executables
 tests/factory_tests
 tests/finance_tests
+.vscode/
