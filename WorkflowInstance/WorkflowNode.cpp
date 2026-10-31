@@ -23,6 +23,34 @@ WorkflowNode* WorkflowNode::getNext() {
 }
 
 HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
+    // instance.setCurrent(this);
+    // instance.markRunning();
+
+    // NodeResult result = process(instance);
+    // recordHistory(instance, result);
+
+     // switch (res.result) {
+        // case HandleResult::PASSED:
+            // pass();
+            // if (next) return next->handle(instance);
+            // instance.complete();
+            // return HandleResult::PASSED;
+        // case HandleResult::REJECTED:
+        //     reject();
+            // instance.rejectNodeName(getName());
+            // return HandleResult::REJECTED;
+        // case HandleResult::FAILED:
+        //     fail();
+        //     return HandleResult::FAILED;
+        // case HandleResult::PENDING:
+            // needsApproval();   // stop; resume() will re-enter
+            // return HandleResult::PENDING;
+        // case HandleResult::CANCELLED:
+        //     cancel();
+            // instance.cancel();
+            // return HandleResult::CANCELLED;
+    // }     
+  // }
     NodeResult nodeRes = process(instance);
 
     std::cout << nodeRes.name << " returned with result: " << nodeRes.result << std::endl;
