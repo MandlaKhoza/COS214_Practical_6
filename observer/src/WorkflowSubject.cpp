@@ -1,4 +1,4 @@
-#include "WorkflowSubject.h"
+#include "../inc/WorkflowSubject.h"
 #include <algorithm>
 
 void WorkflowSubject::attach(std::shared_ptr<WorkflowObserver> o){

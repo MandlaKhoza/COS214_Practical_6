@@ -1,7 +1,7 @@
-#include "AccountCreationObserver.h"
+#include "../inc/AccountCreationObserver.h"
 #include "AccountFactory.h"
 #include "AccountRegistry.h"
-#include "WorkflowInstance.h"
+#include "../../WorkflowInstance/WorkflowInstance.h"
 
 AccountCreationObserver::AccountCreationObserver(std::shared_ptr<AccountFactory> factory, std::shared_ptr<AccountRegistry> registry) : factory(factory), registry(registry){
 }

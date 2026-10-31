@@ -1,4 +1,4 @@
-#include "MessageSender.h"
+#include "../inc/MessageSender.h"
 #include <iostream>
 
 void MessageSender::send(const std::string& recipient, const std::string& subject, const std::string& body){

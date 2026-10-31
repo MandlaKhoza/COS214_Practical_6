@@ -11,9 +11,4 @@
  */
 enum class Outcome { Approved, Rejected, Cancelled };
 
-/**
- * @brief The current status of a workflow instance.
- */
-enum class WorkflowStatus { Created, Running, Approved, Rejected, Cancelled };
-
 #endif

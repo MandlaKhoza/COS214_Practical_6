@@ -1,7 +1,7 @@
-#include "NotificationObserver.h"
-#include "MessageSender.h"
-#include "WorkflowInstance.h"
-#include "Document.h"
+#include "../inc/NotificationObserver.h"
+#include "../inc/MessageSender.h"
+#include "../../WorkflowInstance/WorkflowInstance.h"
+#include "../../DocumentBuilder/Document.h"
 
 NotificationObserver::NotificationObserver(std::shared_ptr<MessageSender> sender, std::string recipientField):sender(sender), recipientField(recipientField) {}
 
