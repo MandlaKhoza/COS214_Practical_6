@@ -6,6 +6,9 @@
  */
 #include "WorkflowController.h"
 
+#include <stdexcept>
+#include <string>
+
 WorkflowController::WorkflowController() {
 	//does nothing as audit logger starts as an empty vector
 }
