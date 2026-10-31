@@ -1,5 +1,5 @@
-#include "RangeCheckNode.h"
-#include "NodeResult.h"
+#include "inc/RangeCheckNode.h"
+#include "inc/NodeResult.h"
 
 RangeCheckNode::RangeCheckNode(std::string name, std::vector<std::shared_ptr<Comparable>> rules) : WorkflowNode(name), rules(rules)
 {}

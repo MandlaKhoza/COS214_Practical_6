@@ -1,4 +1,4 @@
-#include "DocumentBuilder.h"
+#include "inc/DocumentBuilder.h"
 
 void DocumentBuilder::populateTUI(std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields){
     //Will be implemented when the TUI is fully functional
