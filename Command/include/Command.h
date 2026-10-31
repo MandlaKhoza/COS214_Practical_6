@@ -24,7 +24,7 @@
  * @endcode
  *
  * @see WorkflowController, CancelWorkflowCommand, ResetNodeCommand,
- *      ResetWorkflowCommand, AppealCommand
+ *      ResetWorkflowCommand
  * @author Hafani Ramagoma
  * @date 2026-10-30
  */
