@@ -1,0 +1,10 @@
+# Compiled object files
+*.o
+
+# Compiler dependency files
+*.d
+
+# Executables
+tividy
+
+# Temporary integration build files

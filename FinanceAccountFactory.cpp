@@ -1,8 +1,6 @@
 #include "FinanceAccountFactory.h"
-
-#include "WorkflowInstance.h"
-#include "Document.h"
-
+#include "WorkflowInstance/WorkflowInstance.h"
+#include "DocumentBuilder/Document.h"
 #include "LoanAccount.h"
 #include "RefundRecord.h"
 
@@ -31,38 +29,45 @@ FinanceAccountFactory::FinanceAccountFactory(std::string prefix, std::string own
  */
 std::unique_ptr<Account> FinanceAccountFactory::createAccount(WorkflowInstance& w){
 
-    const Document& document = w.getDocument();
-
-    const std::string& workflowType = document.getType();
+    std::shared_ptr<Document> document = w.getDocument();
+    if(!document){
+        return nullptr;
+    }
+    const std::string& workflowType = w.getType();
 
     std::string accountNumber = prefix + nextAccountNumber();
     std::string ownerId = getOwnerId(w);
+    
+    if(ownerId.empty()){
+        return nullptr;
+    }
 
     if(workflowType == "LoanApplication"){
 
         double principal;
         double interestRate;
-        int termMonths;
+        double termMonthsValue;
         double monthlyInstalment;
         double outstanding;
 
-        if(!document.getNumber("principal", principal)){    
+        if(!document->getNumber("principal", principal)){    
             return nullptr;
         }
 
-        if(!document.getNumber("interestRate", interestRate)){
+        if(!document->getNumber("interestRate", interestRate)){
             return nullptr;
         }
 
-        if(!document.getNumber("termMonths", principal)){
+        if(!document->getNumber("termMonths", termMonthsValue)){
+            return nullptr;
+        }
+        int termMonths = static_cast<int>(termMonthsValue);
+
+        if(!document->getNumber("monthlyInstalment", monthlyInstalment)){
             return nullptr;
         }
 
-        if(!document.getNumber("monthlyInstalment", monthlyInstalment)){
-            return nullptr;
-        }
-
-        if(!document.getNumber("outstanding", outstanding)){
+        if(!document->getNumber("outstanding", outstanding)){
             return nullptr;
         }
 
@@ -76,15 +81,15 @@ std::unique_ptr<Account> FinanceAccountFactory::createAccount(WorkflowInstance& 
         double amount;
         std::string payoutMethod;
 
-        if(!document.getField("orderNumber", orderNumber)){
+        if(!document->getField("orderNumber", orderNumber)){
             return nullptr;
         }
 
-        if(!document.getNumber("amount", amount)){
+        if(!document->getNumber("amount", amount)){
             return nullptr;
         }
 
-        if(!document.getField("payoutMethod", payoutMethod)){
+        if(!document->getField("payoutMethod", payoutMethod)){
             return nullptr;
         }
         std::string createdAt = getCurrentTimestamp();

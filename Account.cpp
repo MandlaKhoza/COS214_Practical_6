@@ -60,3 +60,7 @@ std::string Account::describe() const{
     ss << "Type of workflow: " << workflowType << "\n";
     return ss.str();
 }
+
+std::string Account::getWorkflowType() const {
+    return workflowType;
+}

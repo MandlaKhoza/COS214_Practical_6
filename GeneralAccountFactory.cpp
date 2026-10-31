@@ -1,8 +1,8 @@
 #include "GeneralAccountFactory.h"
 
-#include "WorkflowInstance.h"
-#include "Document.h"
-#include "Timestamp.h"
+#include "WorkflowInstance/WorkflowInstance.h"
+#include "DocumentBuilder/Document.h"
+#include "TimeStamp.h"
 
 #include "StudentAccount.h"
 #include "EmployeeAccount.h"
@@ -38,32 +38,41 @@ GeneralAccountFactory::GeneralAccountFactory(std::string prefix, std::string own
  * @return A unique pointer to the newly created Account object, or nullptr
  *         if the workflow type is unsupported or required document information is missing.
  */
-
 std::unique_ptr<Account> GeneralAccountFactory::createAccount(WorkflowInstance& wi){
-    const Document& document = wi.getDocument();
 
-    const std::string& workflowType = document.getType();
+    std::shared_ptr<Document> document = wi.getDocument();
 
-    std::string accountNumber = prefix + nextAccountNumber();
+    if (!document) {
+        return nullptr;
+    }
+
+    const std::string& workflowType = wi.getType();
     std::string ownerId = getOwnerId(wi);
-    std::string createdAt = getCurrentTimestamp();
+
+    if(ownerId.empty()){
+        return nullptr;
+    }
 
     if(workflowType == "StudentApplication"){
+
         std::string studentNumber;
         std::string faculty;
         std::string programme;
 
-        if(!document.getField("studentNumber", studentNumber)){
+        if(!document->getField("studentNumber", studentNumber)){
             return nullptr;
         }
 
-        if(!document.getField("faculty", faculty)){
+        if(!document->getField("faculty", faculty)){
             return nullptr;
         }
 
-        if(!document.getField("programme", programme)){
+        if(!document->getField("programme", programme)){
             return nullptr;
         }
+
+        std::string accountNumber = prefix + nextAccountNumber();
+        std::string createdAt = getCurrentTimestamp();
 
         return std::unique_ptr<Account>(
             new StudentAccount(accountNumber, workflowType, ownerId, createdAt,
@@ -76,17 +85,20 @@ std::unique_ptr<Account> GeneralAccountFactory::createAccount(WorkflowInstance& 
         std::string department;
         std::string systemAccess;
 
-        if(!document.getField("employeeNumber", employeeNumber)){
+        if(!document->getField("employeeNumber", employeeNumber)){
             return nullptr;
         }
 
-        if(!document.getField("department", department)){
+        if(!document->getField("department", department)){
             return nullptr;
         }
 
-        if(!document.getField("systemAccess", systemAccess)){
+        if(!document->getField("systemAccess", systemAccess)){
             return nullptr;
         }
+
+        std::string accountNumber = prefix + nextAccountNumber();
+        std::string createdAt = getCurrentTimestamp();
 
         return std::unique_ptr<Account>(
             new EmployeeAccount(accountNumber, workflowType, ownerId, createdAt,
@@ -95,15 +107,20 @@ std::unique_ptr<Account> GeneralAccountFactory::createAccount(WorkflowInstance& 
     }
 
     else if(workflowType == "Survey"){
+
         std::string responseId;
         double summaryScore;
 
-        if(!document.getField("responseId", responseId)){
+        if(!document->getField("responseId", responseId)){
             return nullptr;
         }
-        if(!document.getNumber("summaryScore", summaryScore)){
+
+        if(!document->getNumber("summaryScore", summaryScore)){
             return nullptr;
         }
+
+        std::string accountNumber = prefix + nextAccountNumber();
+        std::string createdAt = getCurrentTimestamp();
 
         return std::unique_ptr<Account>(
             new SurveyReceipt(accountNumber, workflowType, ownerId, createdAt,

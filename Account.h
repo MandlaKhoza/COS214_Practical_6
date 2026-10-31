@@ -13,6 +13,7 @@ protected:
 
 public:
     Account(std::string number, std::string type, std::string ownerId,  std::string createdAt);
+    virtual ~Account() = default;
     std::string getAccountNumber() const;
     std::string getWorkflowType() const;
     std::string getOwnerId() const;
