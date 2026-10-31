@@ -36,10 +36,11 @@ private:
     std::unique_ptr<WorkflowNode> chain;
     WorkflowNode* current;
     std::string rejectedAt;
-
+    std::string type;  
 public:
-    WorkflowInstance(const std::string& id,
-                     std::shared_ptr<Document> document);
+   WorkflowInstance(const std::string& id,
+                 const std::string& type,
+                 std::shared_ptr<Document> document);
     ~WorkflowInstance();
 
     std::shared_ptr<Document> getDocument() const;
@@ -60,6 +61,7 @@ public:
     void rejectNodeName(const std::string& nodeName);
     void markRunning();
     const std::string& getRejectedAt() const;
+    const std::string& getType() const;
 };
 
 #endif

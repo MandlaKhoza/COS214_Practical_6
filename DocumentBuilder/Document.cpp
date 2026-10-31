@@ -12,3 +12,25 @@ std::map<std::string, std::string> Document::getCommon() {
 std::map<std::string, double> Document::getComparable() {
     return this->comparable;
 }
+
+
+bool Document::getField(std::string fieldName, std::string& value) const{
+    std::map<std::string, std::string>::const_iterator it;
+    it = common.find(fieldName);
+    if(it == common.end()){
+        return false;
+    }
+    value = it->second;
+    return true;
+}
+
+bool Document::getNumber(std::string fieldName, double& value) const{
+    std::map<std::string, double>::const_iterator it;
+
+    it = comparable.find(fieldName);
+    if(it == comparable.end()){
+        return false;
+    }
+    value = it->second;
+    return true;
+}

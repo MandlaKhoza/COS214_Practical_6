@@ -1,7 +1,9 @@
 #include "WorkflowInstance.h"
 
-WorkflowInstance::WorkflowInstance(const std::string& id, std::shared_ptr<Document> document){
+WorkflowInstance::WorkflowInstance(const std::string& id, const std::string& type, 
+  std::shared_ptr<Document> document){
     this->id = id;
+    this->type = type;
     this->document = document;
 }
 
@@ -95,4 +97,9 @@ void WorkflowInstance::markRunning(){
 
 const std::string& WorkflowInstance::getRejectedAt() const{
   return this->id; //Call if you know if you want to know where it rejected
+}
+
+
+const std::string& WorkflowInstance::getType() const {
+    return this->type;
 }
