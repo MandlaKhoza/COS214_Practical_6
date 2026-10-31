@@ -1,18 +1,17 @@
 /**
  * @file test_adapter.cpp
- * @brief Unit tests for the Adapter pattern: the five adaptees (external-system stubs)
- *        and the five adapters.
+ * @brief GoogleTest unit tests for the Adapter pattern: the five adaptees
+ *        (external-system stubs) and the five adapters.
  *
- * Layout follows the COS 214 testing lecture: one TEST_CASE per unit, one SUBCASE per
- * scenario, each written as Arrange / Act / Assert, covering positive, negative,
- * edge-case and error behaviour. The Document dependency is mocked by
- * tests/support/DocumentStub.cpp.
+ * Each class has a test fixture (its shared Arrange step in SetUp()), and each
+ * scenario is one TEST_F written as Arrange / Act / Assert. Test names start with
+ * the kind of case they cover: Positive, Negative, Edge or Errors. The Document
+ * dependency is mocked by tests/support/DocumentStub.cpp.
  *
  * @author Hafani Ramagoma
- * @date 2026-10-30
+ * @date 2026-10-31
  */
-#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
+#include <gtest/gtest.h>
 
 #include <map>
 #include <memory>
@@ -29,9 +28,9 @@
 
 namespace {
 
-const std::string ID = "0102155009087";        ///< a test applicant's ID number
-const std::string OTHER_ID = "9001015800085";  ///< a second test applicant
-const std::string UNKNOWN_ID = "0000000000000";///< an ID no external system knows
+const std::string ID = "0102155009087";         ///< a test applicant's ID number
+const std::string OTHER_ID = "9001015800085";   ///< a second test applicant
+const std::string UNKNOWN_ID = "0000000000000"; ///< an ID no external system knows
 
 /**
  * @brief Builds a Document with the given text and number fields filled in.
@@ -59,360 +58,402 @@ Document makeDoc(const std::map<std::string, std::string>& text,
 //                                       ADAPTEES
 // =====================================================================================
 
-TEST_CASE("LegacyCreditBureau functions as expected") {
-    // Arrange (shared by every subcase; doctest re-runs this for each one)
+/// @brief Fixture: a credit bureau that knows one person (score 712).
+class LegacyCreditBureauTest : public ::testing::Test {
+protected:
+    void SetUp() override { bureau.addRecord(CreditRecord{ID, 712, 15000.0, false}); }
     LegacyCreditBureau bureau;
-    bureau.addRecord(CreditRecord{ID, 712, 15000.0, false});
+};
 
-    SUBCASE("Positive: returns the score of a person it knows") {
-        // Act
-        int score = bureau.fetchScore(ID);
-        // Assert
-        CHECK(score == 712);
-    }
-
-    SUBCASE("Positive: findRecord returns the full record") {
-        const CreditRecord* record = bureau.findRecord(ID);
-        REQUIRE(record != nullptr);
-        CHECK(record->outstandingDebt == doctest::Approx(15000.0));
-        CHECK_FALSE(record->hasDefault);
-    }
-
-    SUBCASE("Negative: an unknown person gives -1") {
-        CHECK(bureau.fetchScore(UNKNOWN_ID) == -1);
-    }
-
-    SUBCASE("Negative: findRecord returns nullptr for an unknown ID") {
-        CHECK(bureau.findRecord(UNKNOWN_ID) == nullptr);
-    }
-
-    SUBCASE("Edge: adding the same ID twice keeps the newer record") {
-        bureau.addRecord(CreditRecord{ID, 540, 90000.0, true});
-        CHECK(bureau.fetchScore(ID) == 540);
-    }
-
-    SUBCASE("Edge: a score of 0 is a real score, not 'unknown'") {
-        bureau.addRecord(CreditRecord{OTHER_ID, 0, 0.0, false});
-        CHECK(bureau.fetchScore(OTHER_ID) == 0);
-    }
-
-    SUBCASE("Errors: looking up an unknown person never throws") {
-        CHECK_NOTHROW(bureau.fetchScore(UNKNOWN_ID));
-    }
+TEST_F(LegacyCreditBureauTest, Positive_ReturnsScoreOfKnownPerson) {
+    // Act
+    int score = bureau.fetchScore(ID);
+    // Assert
+    EXPECT_EQ(score, 712);
 }
 
-TEST_CASE("PoliceRecordsDB functions as expected") {
+TEST_F(LegacyCreditBureauTest, Positive_FindRecordReturnsFullRecord) {
+    const CreditRecord* record = bureau.findRecord(ID);
+    ASSERT_NE(record, nullptr);  // stop here if missing, so we never dereference nullptr
+    EXPECT_DOUBLE_EQ(record->outstandingDebt, 15000.0);
+    EXPECT_FALSE(record->hasDefault);
+}
+
+TEST_F(LegacyCreditBureauTest, Negative_UnknownPersonGivesMinusOne) {
+    EXPECT_EQ(bureau.fetchScore(UNKNOWN_ID), -1);
+}
+
+TEST_F(LegacyCreditBureauTest, Negative_FindRecordReturnsNullForUnknownId) {
+    EXPECT_EQ(bureau.findRecord(UNKNOWN_ID), nullptr);
+}
+
+TEST_F(LegacyCreditBureauTest, Edge_AddingSameIdTwiceKeepsNewerRecord) {
+    bureau.addRecord(CreditRecord{ID, 540, 90000.0, true});
+    EXPECT_EQ(bureau.fetchScore(ID), 540);
+}
+
+TEST_F(LegacyCreditBureauTest, Edge_ScoreOfZeroIsARealScore) {
+    bureau.addRecord(CreditRecord{OTHER_ID, 0, 0.0, false});
+    EXPECT_EQ(bureau.fetchScore(OTHER_ID), 0);
+}
+
+TEST_F(LegacyCreditBureauTest, Errors_LookingUpUnknownPersonNeverThrows) {
+    EXPECT_NO_THROW(bureau.fetchScore(UNKNOWN_ID));
+}
+
+/// @brief Fixture: a police database with one person who has a record.
+class PoliceRecordsDBTest : public ::testing::Test {
+protected:
+    void SetUp() override { db.addRecord(CriminalRecord{ID, true, "Fraud (2019)"}); }
     PoliceRecordsDB db;
-    db.addRecord(CriminalRecord{ID, true, "Fraud (2019)"});
+};
 
-    SUBCASE("Positive: lookup returns a stored record") {
-        const CriminalRecord* record = db.lookup(ID);
-        REQUIRE(record != nullptr);
-        CHECK(record->hasRecord);
-        CHECK(record->offenceSummary == "Fraud (2019)");
-    }
-
-    SUBCASE("Negative: lookup returns nullptr for an unknown ID") {
-        CHECK(db.lookup(UNKNOWN_ID) == nullptr);
-    }
-
-    SUBCASE("Edge: adding the same ID twice keeps the newer record") {
-        db.addRecord(CriminalRecord{ID, false, ""});
-        REQUIRE(db.lookup(ID) != nullptr);
-        CHECK_FALSE(db.lookup(ID)->hasRecord);
-    }
-
-    SUBCASE("Errors: looking up an unknown person never throws") {
-        CHECK_NOTHROW(db.lookup(UNKNOWN_ID));
-    }
+TEST_F(PoliceRecordsDBTest, Positive_LookupReturnsStoredRecord) {
+    const CriminalRecord* record = db.lookup(ID);
+    ASSERT_NE(record, nullptr);
+    EXPECT_TRUE(record->hasRecord);
+    EXPECT_EQ(record->offenceSummary, "Fraud (2019)");
 }
 
-TEST_CASE("HomeAffairsService functions as expected") {
+TEST_F(PoliceRecordsDBTest, Negative_LookupReturnsNullForUnknownId) {
+    EXPECT_EQ(db.lookup(UNKNOWN_ID), nullptr);
+}
+
+TEST_F(PoliceRecordsDBTest, Edge_AddingSameIdTwiceKeepsNewerRecord) {
+    db.addRecord(CriminalRecord{ID, false, ""});
+    ASSERT_NE(db.lookup(ID), nullptr);
+    EXPECT_FALSE(db.lookup(ID)->hasRecord);
+}
+
+TEST_F(PoliceRecordsDBTest, Errors_LookingUpUnknownPersonNeverThrows) {
+    EXPECT_NO_THROW(db.lookup(UNKNOWN_ID));
+}
+
+/// @brief Fixture: a Home Affairs register with one person.
+class HomeAffairsServiceTest : public ::testing::Test {
+protected:
+    void SetUp() override { service.addRecord(IdentityRecord{ID, "Hafs", "Ramagoma", "2001-02-15", true}); }
     HomeAffairsService service;
-    service.addRecord(IdentityRecord{ID, "Hafs", "Ramagoma", "2001-02-15", true});
+};
 
-    SUBCASE("Positive: matching details are verified") {
-        CHECK(service.verifyIdentity("Hafs", "Ramagoma", ID, "2001-02-15"));
-    }
-
-    SUBCASE("Negative: a different surname is not verified") {
-        CHECK_FALSE(service.verifyIdentity("Hafs", "Smith", ID, "2001-02-15"));
-    }
-
-    SUBCASE("Negative: a different date of birth is not verified") {
-        CHECK_FALSE(service.verifyIdentity("Hafs", "Ramagoma", ID, "2001-02-16"));
-    }
-
-    SUBCASE("Negative: an unknown ID is not verified") {
-        CHECK_FALSE(service.verifyIdentity("Hafs", "Ramagoma", UNKNOWN_ID, "2001-02-15"));
-    }
-
-    SUBCASE("Edge: the comparison is case-sensitive") {
-        CHECK_FALSE(service.verifyIdentity("hafs", "Ramagoma", ID, "2001-02-15"));
-    }
-
-    SUBCASE("Positive: findRecord returns the stored record") {
-        const IdentityRecord* record = service.findRecord(ID);
-        REQUIRE(record != nullptr);
-        CHECK(record->surname == "Ramagoma");
-    }
+TEST_F(HomeAffairsServiceTest, Positive_MatchingDetailsAreVerified) {
+    EXPECT_TRUE(service.verifyIdentity("Hafs", "Ramagoma", ID, "2001-02-15"));
 }
 
-TEST_CASE("ExamBoardAPI functions as expected") {
+TEST_F(HomeAffairsServiceTest, Negative_DifferentSurnameIsNotVerified) {
+    EXPECT_FALSE(service.verifyIdentity("Hafs", "Smith", ID, "2001-02-15"));
+}
+
+TEST_F(HomeAffairsServiceTest, Negative_DifferentDateOfBirthIsNotVerified) {
+    EXPECT_FALSE(service.verifyIdentity("Hafs", "Ramagoma", ID, "2001-02-16"));
+}
+
+TEST_F(HomeAffairsServiceTest, Negative_UnknownIdIsNotVerified) {
+    EXPECT_FALSE(service.verifyIdentity("Hafs", "Ramagoma", UNKNOWN_ID, "2001-02-15"));
+}
+
+TEST_F(HomeAffairsServiceTest, Edge_ComparisonIsCaseSensitive) {
+    EXPECT_FALSE(service.verifyIdentity("hafs", "Ramagoma", ID, "2001-02-15"));
+}
+
+TEST_F(HomeAffairsServiceTest, Positive_FindRecordReturnsStoredRecord) {
+    const IdentityRecord* record = service.findRecord(ID);
+    ASSERT_NE(record, nullptr);
+    EXPECT_EQ(record->surname, "Ramagoma");
+}
+
+/// @brief Fixture: an exam board with one candidate.
+class ExamBoardAPITest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        api.addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 78}, {"English", 65}}});
+    }
     ExamBoardAPI api;
-    api.addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 78}, {"English", 65}}});
+};
 
-    SUBCASE("Positive: returns a candidate's marks") {
-        std::map<std::string, int> results = api.getResults("C1001");
-        CHECK(results.size() == 2);
-        CHECK(results["Mathematics"] == 78);
-    }
-
-    SUBCASE("Negative: an unknown candidate gives no results") {
-        CHECK(api.getResults("C9999").empty());
-        CHECK(api.findRecord("C9999") == nullptr);
-    }
-
-    SUBCASE("Edge: adding the same candidate twice keeps the newer record") {
-        api.addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 40}}});
-        std::map<std::string, int> results = api.getResults("C1001");
-        CHECK(results.size() == 1);
-        CHECK(results["Mathematics"] == 40);
-    }
+TEST_F(ExamBoardAPITest, Positive_ReturnsCandidateMarks) {
+    std::map<std::string, int> results = api.getResults("C1001");
+    EXPECT_EQ(results.size(), 2u);
+    EXPECT_EQ(results["Mathematics"], 78);
 }
 
-TEST_CASE("FraudScreeningEngine functions as expected") {
+TEST_F(ExamBoardAPITest, Negative_UnknownCandidateGivesNoResults) {
+    EXPECT_TRUE(api.getResults("C9999").empty());
+    EXPECT_EQ(api.findRecord("C9999"), nullptr);
+}
+
+TEST_F(ExamBoardAPITest, Edge_AddingSameCandidateTwiceKeepsNewerRecord) {
+    api.addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 40}}});
+    std::map<std::string, int> results = api.getResults("C1001");
+    EXPECT_EQ(results.size(), 1u);
+    EXPECT_EQ(results["Mathematics"], 40);
+}
+
+/// @brief Fixture: a fraud engine with a low-risk person and a flagged person.
+class FraudScreeningEngineTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        engine.addProfile(FraudProfile{ID, 0.1, false, ""});
+        engine.addProfile(FraudProfile{OTHER_ID, 0.3, true, "Identity theft report"});
+    }
     FraudScreeningEngine engine;
-    engine.addProfile(FraudProfile{ID, 0.1, false, ""});
-    engine.addProfile(FraudProfile{OTHER_ID, 0.3, true, "Identity theft report"});
+};
 
-    SUBCASE("Positive: a known person's base risk is used for small amounts") {
-        CHECK(engine.riskScore(ID, 50000) == doctest::Approx(0.1));
-    }
+TEST_F(FraudScreeningEngineTest, Positive_KnownPersonBaseRiskForSmallAmounts) {
+    EXPECT_DOUBLE_EQ(engine.riskScore(ID, 50000), 0.1);
+}
 
-    SUBCASE("Positive: an unknown person starts at 0.2") {
-        CHECK(engine.riskScore(UNKNOWN_ID, 50000) == doctest::Approx(0.2));
-    }
+TEST_F(FraudScreeningEngineTest, Positive_UnknownPersonStartsAtPointTwo) {
+    EXPECT_DOUBLE_EQ(engine.riskScore(UNKNOWN_ID, 50000), 0.2);
+}
 
-    SUBCASE("Negative: a flagged person is always 1.0") {
-        CHECK(engine.riskScore(OTHER_ID, 10) == doctest::Approx(1.0));
-    }
+TEST_F(FraudScreeningEngineTest, Negative_FlaggedPersonIsAlwaysOne) {
+    EXPECT_DOUBLE_EQ(engine.riskScore(OTHER_ID, 10), 1.0);
+}
 
-    SUBCASE("Edge: exactly R100 000 adds nothing; just above adds 0.1") {
-        CHECK(engine.riskScore(ID, 100000.0) == doctest::Approx(0.1));
-        CHECK(engine.riskScore(ID, 100000.01) == doctest::Approx(0.2));
-    }
+TEST_F(FraudScreeningEngineTest, Edge_ExactlyR100000AddsNothingJustAboveAddsPointOne) {
+    EXPECT_NEAR(engine.riskScore(ID, 100000.0), 0.1, 1e-9);
+    EXPECT_NEAR(engine.riskScore(ID, 100000.01), 0.2, 1e-9);
+}
 
-    SUBCASE("Edge: above R500 000 adds 0.2") {
-        CHECK(engine.riskScore(ID, 900000.0) == doctest::Approx(0.3));
-    }
+TEST_F(FraudScreeningEngineTest, Edge_AboveR500000AddsPointTwo) {
+    EXPECT_NEAR(engine.riskScore(ID, 900000.0), 0.3, 1e-9);
+}
 
-    SUBCASE("Edge: risk is capped at 1.0") {
-        engine.addProfile(FraudProfile{ID, 0.95, false, ""});
-        CHECK(engine.riskScore(ID, 900000.0) == doctest::Approx(1.0));
-    }
+TEST_F(FraudScreeningEngineTest, Edge_RiskIsCappedAtOne) {
+    engine.addProfile(FraudProfile{ID, 0.95, false, ""});
+    EXPECT_DOUBLE_EQ(engine.riskScore(ID, 900000.0), 1.0);
 }
 
 // =====================================================================================
 //                                        ADAPTERS
 // =====================================================================================
 
-TEST_CASE("CreditCheckAdapter functions as expected") {
-    // Arrange: the mock external system and the adapter
-    std::shared_ptr<LegacyCreditBureau> bureau = std::make_shared<LegacyCreditBureau>();
-    bureau->addRecord(CreditRecord{ID, 712, 15000.0, false});
-    bureau->addRecord(CreditRecord{OTHER_ID, 590, 80000.0, true});
-    CreditCheckAdapter adapter(bureau, FieldNames::ID_NUMBER, 650);
-
-    SUBCASE("Positive: passes when the score meets the minimum") {
-        // Act
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, ID}}));
-        // Assert
-        CHECK(r.passed);
-        CHECK(r.checkName == "Credit check");
-        CHECK(r.message == "Credit score 712 meets minimum 650");
-        CHECK(r.data["score"] == "712");
+/// @brief Fixture: the mock bureau (scores 712 and 590) and an adapter with minimum 650.
+class CreditCheckAdapterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        bureau = std::make_shared<LegacyCreditBureau>();
+        bureau->addRecord(CreditRecord{ID, 712, 15000.0, false});
+        bureau->addRecord(CreditRecord{OTHER_ID, 590, 80000.0, true});
+        adapter.reset(new CreditCheckAdapter(bureau, FieldNames::ID_NUMBER, 650));
     }
+    std::shared_ptr<LegacyCreditBureau> bureau;
+    std::unique_ptr<CreditCheckAdapter> adapter;
+};
 
-    SUBCASE("Negative: rejects a score below the minimum") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Credit score 590 below minimum 650");
-    }
-
-    SUBCASE("Negative: fails when the bureau does not know the person") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "No credit record found for ID " + UNKNOWN_ID);
-    }
-
-    SUBCASE("Edge: a score exactly at the minimum passes") {
-        CreditCheckAdapter strict(bureau, FieldNames::ID_NUMBER, 712);
-        CHECK(strict.run(makeDoc({{FieldNames::ID_NUMBER, ID}})).passed);
-    }
-
-    SUBCASE("Errors: an ID on the form but left blank gives 'Missing field'") {
-        Document doc;
-        doc.addTextField(FieldNames::ID_NUMBER);  // on the form, never filled in
-        CheckResult r = adapter.run(doc);
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Missing field: idNumber");
-    }
-
-    SUBCASE("Errors: an empty Document gives 'Missing field' and does not throw") {
-        CHECK_NOTHROW(adapter.run(Document()));
-        CHECK(adapter.run(Document()).message == "Missing field: idNumber");
-    }
+TEST_F(CreditCheckAdapterTest, Positive_PassesWhenScoreMeetsMinimum) {
+    // Act
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, ID}}));
+    // Assert
+    EXPECT_TRUE(r.passed);
+    EXPECT_EQ(r.checkName, "Credit check");
+    EXPECT_EQ(r.message, "Credit score 712 meets minimum 650");
+    EXPECT_EQ(r.data["score"], "712");
 }
 
-TEST_CASE("CriminalRecordAdapter functions as expected") {
-    std::shared_ptr<PoliceRecordsDB> db = std::make_shared<PoliceRecordsDB>();
-    db->addRecord(CriminalRecord{ID, true, "Fraud (2019)"});
-    db->addRecord(CriminalRecord{OTHER_ID, false, ""});
-    CriminalRecordAdapter adapter(db, FieldNames::ID_NUMBER);
-
-    SUBCASE("Positive: a person with no entry is clean") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}));
-        CHECK(r.passed);
-        CHECK(r.message == "No criminal record");
-        CHECK(r.data["hasRecord"] == "false");
-    }
-
-    SUBCASE("Positive: an entry that says 'no record' is clean") {
-        CHECK(adapter.run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}})).passed);
-    }
-
-    SUBCASE("Negative: rejects a person with a record, naming the offence") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, ID}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Criminal record found: Fraud (2019)");
-        CHECK(r.data["hasRecord"] == "true");
-    }
-
-    SUBCASE("Errors: a missing ID gives 'Missing field'") {
-        CHECK(adapter.run(Document()).message == "Missing field: idNumber");
-    }
+TEST_F(CreditCheckAdapterTest, Negative_RejectsScoreBelowMinimum) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Credit score 590 below minimum 650");
 }
 
-TEST_CASE("IdentityVerificationAdapter functions as expected") {
-    std::shared_ptr<HomeAffairsService> service = std::make_shared<HomeAffairsService>();
-    service->addRecord(IdentityRecord{ID, "Hafs", "Ramagoma", "2001-02-15", true});
-    IdentityVerificationAdapter adapter(service, FieldNames::NAME, FieldNames::SURNAME,
-                                        FieldNames::ID_NUMBER, FieldNames::DATE_OF_BIRTH);
-
-    SUBCASE("Positive: passes when all four details match") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::SURNAME, "Ramagoma"},
-                                             {FieldNames::ID_NUMBER, ID}, {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
-        CHECK(r.passed);
-        CHECK(r.message == "Identity confirmed by Home Affairs");
-    }
-
-    SUBCASE("Negative: rejects when one detail differs") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::SURNAME, "Smith"},
-                                             {FieldNames::ID_NUMBER, ID}, {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Identity details do not match Home Affairs records");
-    }
-
-    SUBCASE("Errors: names the first missing field (surname)") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::ID_NUMBER, ID},
-                                             {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
-        CHECK(r.message == "Missing field: surname");
-    }
-
-    SUBCASE("Edge: with every field missing, the name is reported first") {
-        CHECK(adapter.run(Document()).message == "Missing field: name");
-    }
+TEST_F(CreditCheckAdapterTest, Negative_FailsWhenBureauDoesNotKnowPerson) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "No credit record found for ID " + UNKNOWN_ID);
 }
 
-TEST_CASE("QualificationAdapter functions as expected") {
-    std::shared_ptr<ExamBoardAPI> api = std::make_shared<ExamBoardAPI>();
-    api->addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 78}, {"English", 65}}});
-    api->addRecord(ExamRecord{"C1002", "Thabo Mokoena", {{"Mathematics", 45}, {"English", 70}}});
+TEST_F(CreditCheckAdapterTest, Edge_ScoreExactlyAtMinimumPasses) {
+    CreditCheckAdapter strict(bureau, FieldNames::ID_NUMBER, 712);
+    EXPECT_TRUE(strict.run(makeDoc({{FieldNames::ID_NUMBER, ID}})).passed);
+}
+
+TEST_F(CreditCheckAdapterTest, Errors_IdOnFormButBlankGivesMissingField) {
+    Document doc;
+    doc.addTextField(FieldNames::ID_NUMBER);  // on the form, never filled in
+    CheckResult r = adapter->run(doc);
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Missing field: idNumber");
+}
+
+TEST_F(CreditCheckAdapterTest, Errors_EmptyDocumentGivesMissingFieldAndDoesNotThrow) {
+    EXPECT_NO_THROW(adapter->run(Document()));
+    EXPECT_EQ(adapter->run(Document()).message, "Missing field: idNumber");
+}
+
+/// @brief Fixture: a police database (one record, one clean entry) and the adapter.
+class CriminalRecordAdapterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        db = std::make_shared<PoliceRecordsDB>();
+        db->addRecord(CriminalRecord{ID, true, "Fraud (2019)"});
+        db->addRecord(CriminalRecord{OTHER_ID, false, ""});
+        adapter.reset(new CriminalRecordAdapter(db, FieldNames::ID_NUMBER));
+    }
+    std::shared_ptr<PoliceRecordsDB> db;
+    std::unique_ptr<CriminalRecordAdapter> adapter;
+};
+
+TEST_F(CriminalRecordAdapterTest, Positive_PersonWithNoEntryIsClean) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}));
+    EXPECT_TRUE(r.passed);
+    EXPECT_EQ(r.message, "No criminal record");
+    EXPECT_EQ(r.data["hasRecord"], "false");
+}
+
+TEST_F(CriminalRecordAdapterTest, Positive_EntrySayingNoRecordIsClean) {
+    EXPECT_TRUE(adapter->run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}})).passed);
+}
+
+TEST_F(CriminalRecordAdapterTest, Negative_RejectsPersonWithRecordNamingOffence) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, ID}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Criminal record found: Fraud (2019)");
+    EXPECT_EQ(r.data["hasRecord"], "true");
+}
+
+TEST_F(CriminalRecordAdapterTest, Errors_MissingIdGivesMissingField) {
+    EXPECT_EQ(adapter->run(Document()).message, "Missing field: idNumber");
+}
+
+/// @brief Fixture: Home Affairs with one person and the identity adapter.
+class IdentityVerificationAdapterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        service = std::make_shared<HomeAffairsService>();
+        service->addRecord(IdentityRecord{ID, "Hafs", "Ramagoma", "2001-02-15", true});
+        adapter.reset(new IdentityVerificationAdapter(service, FieldNames::NAME, FieldNames::SURNAME,
+                                                      FieldNames::ID_NUMBER, FieldNames::DATE_OF_BIRTH));
+    }
+    std::shared_ptr<HomeAffairsService> service;
+    std::unique_ptr<IdentityVerificationAdapter> adapter;
+};
+
+TEST_F(IdentityVerificationAdapterTest, Positive_PassesWhenAllFourDetailsMatch) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::SURNAME, "Ramagoma"},
+                                          {FieldNames::ID_NUMBER, ID}, {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
+    EXPECT_TRUE(r.passed);
+    EXPECT_EQ(r.message, "Identity confirmed by Home Affairs");
+}
+
+TEST_F(IdentityVerificationAdapterTest, Negative_RejectsWhenOneDetailDiffers) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::SURNAME, "Smith"},
+                                          {FieldNames::ID_NUMBER, ID}, {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Identity details do not match Home Affairs records");
+}
+
+TEST_F(IdentityVerificationAdapterTest, Errors_NamesFirstMissingField) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::NAME, "Hafs"}, {FieldNames::ID_NUMBER, ID},
+                                          {FieldNames::DATE_OF_BIRTH, "2001-02-15"}}));
+    EXPECT_EQ(r.message, "Missing field: surname");
+}
+
+TEST_F(IdentityVerificationAdapterTest, Edge_WithEveryFieldMissingNameIsReportedFirst) {
+    EXPECT_EQ(adapter->run(Document()).message, "Missing field: name");
+}
+
+/// @brief Fixture: an exam board (one strong, one weak candidate) and an adapter requiring 50 in two subjects.
+class QualificationAdapterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        api = std::make_shared<ExamBoardAPI>();
+        api->addRecord(ExamRecord{"C1001", "Hafs Ramagoma", {{"Mathematics", 78}, {"English", 65}}});
+        api->addRecord(ExamRecord{"C1002", "Thabo Mokoena", {{"Mathematics", 45}, {"English", 70}}});
+        required["Mathematics"] = 50;
+        required["English"] = 50;
+        adapter.reset(new QualificationAdapter(api, FieldNames::EXAM_CANDIDATE_NUMBER, required));
+    }
+    std::shared_ptr<ExamBoardAPI> api;
     std::map<std::string, int> required;
-    required["Mathematics"] = 50;
-    required["English"] = 50;
-    QualificationAdapter adapter(api, FieldNames::EXAM_CANDIDATE_NUMBER, required);
+    std::unique_ptr<QualificationAdapter> adapter;
+};
 
-    SUBCASE("Positive: passes when every required mark is met") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}}));
-        CHECK(r.passed);
-        CHECK(r.data["Mathematics"] == "78");
-    }
-
-    SUBCASE("Negative: rejects a mark below the minimum, naming it") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1002"}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Required marks not met: Mathematics 45 < 50");
-    }
-
-    SUBCASE("Negative: rejects a required subject that was not taken") {
-        std::map<std::string, int> withScience = required;
-        withScience["Physical Sciences"] = 50;
-        QualificationAdapter science(api, FieldNames::EXAM_CANDIDATE_NUMBER, withScience);
-        CHECK(science.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}})).message ==
-              "Required marks not met: Physical Sciences not taken");
-    }
-
-    SUBCASE("Negative: fails when the exam board has no results") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C9999"}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "No exam results found for candidate C9999");
-    }
-
-    SUBCASE("Edge: a mark exactly at the minimum passes") {
-        std::map<std::string, int> exact;
-        exact["English"] = 65;
-        QualificationAdapter exactAdapter(api, FieldNames::EXAM_CANDIDATE_NUMBER, exact);
-        CHECK(exactAdapter.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}})).passed);
-    }
-
-    SUBCASE("Errors: a missing candidate number gives 'Missing field'") {
-        CHECK(adapter.run(Document()).message == "Missing field: examCandidateNumber");
-    }
+TEST_F(QualificationAdapterTest, Positive_PassesWhenEveryRequiredMarkIsMet) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}}));
+    EXPECT_TRUE(r.passed);
+    EXPECT_EQ(r.data["Mathematics"], "78");
 }
 
-TEST_CASE("FraudCheckAdapter functions as expected") {
-    std::shared_ptr<FraudScreeningEngine> engine = std::make_shared<FraudScreeningEngine>();
-    engine->addProfile(FraudProfile{ID, 0.1, false, ""});
-    engine->addProfile(FraudProfile{OTHER_ID, 0.3, true, "Identity theft report"});
-    FraudCheckAdapter adapter(engine, FieldNames::ID_NUMBER, FieldNames::LOAN_AMOUNT, 0.5);
+TEST_F(QualificationAdapterTest, Negative_RejectsMarkBelowMinimumNamingIt) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1002"}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Required marks not met: Mathematics 45 < 50");
+}
 
-    SUBCASE("Positive: passes a low-risk person and a small amount") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, ID}}, {{FieldNames::LOAN_AMOUNT, 50000}}));
-        CHECK(r.passed);
-        CHECK(r.data["risk"] == "0.10");
-        CHECK(r.message == "Fraud risk 0.10 within limit 0.50");
-    }
+TEST_F(QualificationAdapterTest, Negative_RejectsRequiredSubjectNotTaken) {
+    std::map<std::string, int> withScience = required;
+    withScience["Physical Sciences"] = 50;
+    QualificationAdapter science(api, FieldNames::EXAM_CANDIDATE_NUMBER, withScience);
+    EXPECT_EQ(science.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}})).message,
+              "Required marks not met: Physical Sciences not taken");
+}
 
-    SUBCASE("Negative: rejects a flagged person whatever the amount") {
-        CheckResult r = adapter.run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}}, {{FieldNames::LOAN_AMOUNT, 1000}}));
-        CHECK_FALSE(r.passed);
-        CHECK(r.message == "Fraud risk 1.00 above maximum 0.50");
-    }
+TEST_F(QualificationAdapterTest, Negative_FailsWhenExamBoardHasNoResults) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C9999"}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "No exam results found for candidate C9999");
+}
 
-    SUBCASE("Edge: a risk exactly at the maximum passes") {
-        FraudCheckAdapter strict(engine, FieldNames::ID_NUMBER, FieldNames::LOAN_AMOUNT, 0.2);
-        CHECK(strict.run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}, {{FieldNames::LOAN_AMOUNT, 1000}})).passed);
-    }
+TEST_F(QualificationAdapterTest, Edge_MarkExactlyAtMinimumPasses) {
+    std::map<std::string, int> exact;
+    exact["English"] = 65;
+    QualificationAdapter exactAdapter(api, FieldNames::EXAM_CANDIDATE_NUMBER, exact);
+    EXPECT_TRUE(exactAdapter.run(makeDoc({{FieldNames::EXAM_CANDIDATE_NUMBER, "C1001"}})).passed);
+}
 
-    SUBCASE("Positive: the same class checks refunds by changing the amount field") {
-        FraudCheckAdapter refund(engine, FieldNames::ID_NUMBER, FieldNames::REFUND_AMOUNT, 0.5);
-        CHECK(refund.run(makeDoc({{FieldNames::ID_NUMBER, ID}}, {{FieldNames::REFUND_AMOUNT, 300}})).passed);
-    }
+TEST_F(QualificationAdapterTest, Errors_MissingCandidateNumberGivesMissingField) {
+    EXPECT_EQ(adapter->run(Document()).message, "Missing field: examCandidateNumber");
+}
 
-    SUBCASE("Errors: an amount on the form but left blank gives 'Missing field'") {
-        Document doc = makeDoc({{FieldNames::ID_NUMBER, ID}});
-        doc.addNumberField(FieldNames::LOAN_AMOUNT);  // on the form, never filled in
-        CHECK(adapter.run(doc).message == "Missing field: loanAmount");
+/// @brief Fixture: a fraud engine (low-risk and flagged person) and an adapter with maximum risk 0.5.
+class FraudCheckAdapterTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        engine = std::make_shared<FraudScreeningEngine>();
+        engine->addProfile(FraudProfile{ID, 0.1, false, ""});
+        engine->addProfile(FraudProfile{OTHER_ID, 0.3, true, "Identity theft report"});
+        adapter.reset(new FraudCheckAdapter(engine, FieldNames::ID_NUMBER, FieldNames::LOAN_AMOUNT, 0.5));
     }
+    std::shared_ptr<FraudScreeningEngine> engine;
+    std::unique_ptr<FraudCheckAdapter> adapter;
+};
+
+TEST_F(FraudCheckAdapterTest, Positive_PassesLowRiskPersonAndSmallAmount) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, ID}}, {{FieldNames::LOAN_AMOUNT, 50000}}));
+    EXPECT_TRUE(r.passed);
+    EXPECT_EQ(r.data["risk"], "0.10");
+    EXPECT_EQ(r.message, "Fraud risk 0.10 within limit 0.50");
+}
+
+TEST_F(FraudCheckAdapterTest, Negative_RejectsFlaggedPersonWhateverTheAmount) {
+    CheckResult r = adapter->run(makeDoc({{FieldNames::ID_NUMBER, OTHER_ID}}, {{FieldNames::LOAN_AMOUNT, 1000}}));
+    EXPECT_FALSE(r.passed);
+    EXPECT_EQ(r.message, "Fraud risk 1.00 above maximum 0.50");
+}
+
+TEST_F(FraudCheckAdapterTest, Edge_RiskExactlyAtMaximumPasses) {
+    FraudCheckAdapter strict(engine, FieldNames::ID_NUMBER, FieldNames::LOAN_AMOUNT, 0.2);
+    EXPECT_TRUE(strict.run(makeDoc({{FieldNames::ID_NUMBER, UNKNOWN_ID}}, {{FieldNames::LOAN_AMOUNT, 1000}})).passed);
+}
+
+TEST_F(FraudCheckAdapterTest, Positive_SameClassChecksRefundsByChangingAmountField) {
+    FraudCheckAdapter refund(engine, FieldNames::ID_NUMBER, FieldNames::REFUND_AMOUNT, 0.5);
+    EXPECT_TRUE(refund.run(makeDoc({{FieldNames::ID_NUMBER, ID}}, {{FieldNames::REFUND_AMOUNT, 300}})).passed);
+}
+
+TEST_F(FraudCheckAdapterTest, Errors_AmountOnFormButBlankGivesMissingField) {
+    Document doc = makeDoc({{FieldNames::ID_NUMBER, ID}});
+    doc.addNumberField(FieldNames::LOAN_AMOUNT);  // on the form, never filled in
+    EXPECT_EQ(adapter->run(doc).message, "Missing field: loanAmount");
 }
 
 // =====================================================================================
 //                                   THE PATTERN ITSELF
 // =====================================================================================
 
-TEST_CASE("Every adapter can be used through the ExternalCheck interface") {
+TEST(AdapterPatternTest, EveryAdapterCanBeUsedThroughExternalCheckInterface) {
     // Arrange: five different adapters behind one interface (what ExternalCheckNode relies on)
     std::vector<std::shared_ptr<ExternalCheck>> checks;
     checks.push_back(std::make_shared<CreditCheckAdapter>(std::make_shared<LegacyCreditBureau>(),
@@ -432,8 +473,8 @@ TEST_CASE("Every adapter can be used through the ExternalCheck interface") {
     Document empty;
     for (std::size_t i = 0; i < checks.size(); ++i) {
         CheckResult r = checks[i]->run(empty);
-        CHECK_FALSE(r.passed);
-        CHECK(r.message.find("Missing field: ") == 0);
-        CHECK(r.checkName == checks[i]->getName());
+        EXPECT_FALSE(r.passed);
+        EXPECT_EQ(r.message.find("Missing field: "), 0u);
+        EXPECT_EQ(r.checkName, checks[i]->getName());
     }
 }
