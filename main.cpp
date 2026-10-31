@@ -105,7 +105,7 @@ int main() {
     {
         std::cout << "\n[3] Happy path (fully valid document)\n";
 
-        WorkflowInstance wi("WF-001", doc);
+        WorkflowInstance wi("WF-001", "type", doc);
 
         wi.setChain(std::move(docCheck));
 
@@ -129,7 +129,7 @@ int main() {
             }
         );
 
-        WorkflowInstance wi("WF-002", bad);
+        WorkflowInstance wi("WF-002","type", bad);
 
         DocCompletionCheckNode n("DocCompletionCheck");
 
@@ -151,7 +151,7 @@ int main() {
             }
         );
 
-        WorkflowInstance wi2("WF-003", bad2);
+        WorkflowInstance wi2("WF-003","type", bad2);
 
         DocCompletionCheckNode n2("DocCompletionCheck");
 
@@ -176,7 +176,7 @@ int main() {
             }
         );
 
-        WorkflowInstance wi("WF-004", d1);
+        WorkflowInstance wi("WF-004","type", d1);
 
         RangeCheckNode n("RangeCheck", standardRules());
 
@@ -195,7 +195,7 @@ int main() {
             }
         );
 
-        WorkflowInstance wi2("WF-005", d2);
+        WorkflowInstance wi2("WF-005","type", d2);
 
         RangeCheckNode n2("RangeCheck", standardRules());
 

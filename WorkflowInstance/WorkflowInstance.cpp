@@ -87,7 +87,7 @@ bool WorkflowInstance::isCancelled() const{
   return false;
 }
 
-void WorkflowInstance::rejectNodeName(const std::string& nodeName){
+void WorkflowInstance::reject(const std::string& nodeName){
   //Probably checks the names, will have to do later
 }
 

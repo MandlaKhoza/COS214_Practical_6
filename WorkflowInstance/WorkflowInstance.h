@@ -45,7 +45,7 @@ public:
 
     std::shared_ptr<Document> getDocument() const;
     void setChain(std::unique_ptr<WorkflowNode> chain);
-    WorkflowNode* getChain() const;
+    WorkflowNode* getChain() const; // EXTRA : Remove if unused
     void run();
     void resume();
     void reset();
@@ -58,7 +58,7 @@ public:
     void cancel();
     bool isFinished() const;
     bool isCancelled() const;
-    void rejectNodeName(const std::string& nodeName);
+    void reject(const std::string& nodeName); // EXTRA : Remove if unused
     void markRunning();
     const std::string& getRejectedAt() const;
     const std::string& getType() const;
