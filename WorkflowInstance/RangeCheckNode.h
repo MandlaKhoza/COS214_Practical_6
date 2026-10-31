@@ -12,7 +12,6 @@
 #include <string>
 
 class WorkflowInstance;
-struct NodeResult;
 
 class RangeCheckNode : public WorkflowNode {
 private:
