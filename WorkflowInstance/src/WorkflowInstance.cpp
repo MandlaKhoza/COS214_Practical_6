@@ -1,4 +1,4 @@
-#include "WorkflowInstance.h"
+#include "inc/WorkflowInstance.h"
 
 WorkflowInstance::WorkflowInstance(const std::string& id, const std::string& type, 
   std::shared_ptr<Document> document){

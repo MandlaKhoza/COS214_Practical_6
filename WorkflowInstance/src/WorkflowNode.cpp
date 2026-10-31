@@ -1,4 +1,4 @@
-#include "WorkflowNode.h"
+#include "inc/WorkflowNode.h"
 
 #include <iostream>
 
