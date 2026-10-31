@@ -26,7 +26,7 @@ public:
     virtual ~WorkflowNode() = default;
 
     void setNext(std::unique_ptr<WorkflowNode> next);
-    std::string getName();
+    std::string getName() const;
     WorkflowNode* getNext();
     HandleResult handle(WorkflowInstance& instance);
     NodeState* getState();

@@ -14,7 +14,7 @@ void WorkflowNode::setNext(std::unique_ptr<WorkflowNode> next){
     this->next = std::move(next);
 }
 
-std::string WorkflowNode::getName() {
+std::string WorkflowNode::getName() const {
     return this->name;
 }
 
@@ -26,7 +26,7 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
     NodeResult nodeRes = process(instance);
 
     std::cout << nodeRes.name << " returned with result: " << nodeRes.result << std::endl;
-    
+
     return nodeRes.result;
 }
 

@@ -2,8 +2,14 @@
 #define RANGE_CHECK_NODE_H
 
 #include "WorkflowNode.h"
-#include <vector>
+#include "WorkflowInstance.h"
+#include "Document.h"
 #include "Comparable.h"
+
+#include <vector>
+#include <map>
+#include <iostream>
+#include <string>
 
 class WorkflowInstance;
 struct NodeResult;
@@ -16,8 +22,8 @@ protected:
     NodeResult process(WorkflowInstance& instance) override;
 
 public:
-    explicit RangeCheckNode(const std::string& name);
-    std::unique_ptr<WorkflowNode> clone() const override;
+    RangeCheckNode(std::string name, std::vector<std::shared_ptr<Comparable>> rules);
+    std::unique_ptr<WorkflowNode> clone() override;
 };
 
 #endif
