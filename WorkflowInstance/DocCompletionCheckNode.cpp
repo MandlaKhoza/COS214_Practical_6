@@ -33,8 +33,7 @@ NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi){
 }
 
 std::unique_ptr<WorkflowNode> DocCompletionCheckNode::clone(){
-  //DocCompletion doesn't really store anything, so cloning isn't really necessary
-  //TODO fix clone
-  WorkflowNode node = new DocCompletionCheckNode("DocCompletionCheckNode");
-  return node;
+    std::string name = this->WorkflowNode::getName();
+
+    return std::unique_ptr<WorkflowNode>(new DocCompletionCheckNode(name));
 }
