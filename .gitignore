@@ -8,3 +8,7 @@
 tividy
 
 # Temporary integration build files
+
+# Generated test executables
+tests/factory_tests
+tests/finance_tests
