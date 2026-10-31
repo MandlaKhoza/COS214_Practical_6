@@ -17,7 +17,7 @@ ApprovalDecision ThresholdApprover::decide(const ApprovalRequest& req) const
     }
     else
     {
-        if (req.instance->getDocument().getNumber(valueField, value))
+        if (req.instance->getDocument()->getNumber(valueField, value))
         {
             if (value<=maxAuth)
             {
