@@ -1,5 +1,6 @@
 #include "AccountFactory.h"
-
+#include <memory>
+//#include "WorkflowInstance.h"
 
 /**
  * @brief Constructor of  AccountFactories.
@@ -56,10 +57,11 @@ std::string AccountFactory::nextAccountNumber(){
 std::string AccountFactory::getOwnerId(const WorkflowInstance& w) const{
     std::string id;
 
-    const Document& d = w.getDocument();
-    bool found = d.getField(ownerField, id);
+    std::shared_ptr<Document> d = w.getDocument();
+    bool found = d->getField(ownerField, id);
     if(found == false){
         return "";
     }
+
     return id;
 }

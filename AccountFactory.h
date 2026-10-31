@@ -14,12 +14,12 @@ protected:
     int counter;
     std::string ownerField;
 
-    std::unique_ptr<Account> create(WorkflowInstance& w);
     std::string nextAccountNumber();
     std::string getOwnerId(const WorkflowInstance& w) const;
 
 public:
     AccountFactory(std::string prefix, std::string ownerField);
+    std::unique_ptr<Account> create(WorkflowInstance& w);
     virtual std::unique_ptr<Account> createAccount(WorkflowInstance& w) = 0;
     virtual ~AccountFactory();
 
