@@ -1,4 +1,5 @@
 #include "../inc/WorkflowNode.h"
+#include "WaitingState.h"
 
 #include <iostream>
 
@@ -6,8 +7,8 @@ void WorkflowNode::setState(std::unique_ptr<NodeState> state) {
     this->state = std::move(state);
 }
 
-WorkflowNode::WorkflowNode(std::string name){
-    this->name = name;
+WorkflowNode::WorkflowNode(std::string name) : name(name), state(new WaitingState()) {
+    // FIX 3: every node starts in Waiting
 }
 
 void WorkflowNode::setNext(std::unique_ptr<WorkflowNode> next){
@@ -59,58 +60,52 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
 }
 
 NodeState* WorkflowNode::getState() {
-    return nullptr;
-    //return this->state.get();
+    return this->state.get();
 }
 
 std::string WorkflowNode::getStateName() {
-    return nullptr;
-    //return this->state->getName();
+    return this->state->getName();   // FIX 4: returning nullptr as a std::string crashes
 }
 
 void WorkflowNode::start() {
-    //this->state->start(this);
+    this->state->start(*this);
 }
 
 void WorkflowNode::pass() {
-    //this->state->pass(this);
+    this->state->pass(*this);
 }
 
 void WorkflowNode::needsApproval() {
-    //this->state->approve(this);
+    this->state->needsApproval(*this);
 }
 
 void WorkflowNode::approve() {
-    //this->state->approve(this);
+    this->state->approve(*this);
 }
 
 void WorkflowNode::reject() {
-    //this->state->reject(this);
+    this->state->reject(*this);
 }
 
 void WorkflowNode::fail() {
-    //this->state->fail(this);
-}
-
-void WorkflowNode::retry() {
-    //this->state->retry(this);
+    this->state->fail(*this);
 }
 
 void WorkflowNode::cancel() {
-    //this->state->cancel(this);
+    this->state->cancel(*this);
 }
 
 void WorkflowNode::reset() {
-    //this->state->reset(this);
+    this->state->reset(*this);
 }
 
 void WorkflowNode::resetChain() {
-    this->reset();
-    this->next->resetChain();
+    reset();
+    if (next) next->resetChain();
 }
 
 std::unique_ptr<WorkflowNode> WorkflowNode::cloneChain() {
-    std::unique_ptr<WorkflowNode> copy = clone();      // copy me
-    if (next) copy->setNext(next->cloneChain()); // copy the rest, attach it after me
+    std::unique_ptr<WorkflowNode> copy = clone();
+    if (next) copy->setNext(next->cloneChain());
     return copy;
 }

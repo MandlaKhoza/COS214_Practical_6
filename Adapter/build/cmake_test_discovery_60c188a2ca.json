@@ -1,0 +1,332 @@
+{
+  "tests": 52,
+  "name": "AllTests",
+  "testsuites": [
+    {
+      "name": "LegacyCreditBureauTest",
+      "tests": 7,
+      "testsuite": [
+        {
+          "name": "Positive_ReturnsScoreOfKnownPerson",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 68
+        },
+        {
+          "name": "Positive_FindRecordReturnsFullRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 75
+        },
+        {
+          "name": "Negative_UnknownPersonGivesMinusOne",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 82
+        },
+        {
+          "name": "Negative_FindRecordReturnsNullForUnknownId",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 86
+        },
+        {
+          "name": "Edge_AddingSameIdTwiceKeepsNewerRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 90
+        },
+        {
+          "name": "Edge_ScoreOfZeroIsARealScore",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 95
+        },
+        {
+          "name": "Errors_LookingUpUnknownPersonNeverThrows",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 100
+        }
+      ]
+    },
+    {
+      "name": "PoliceRecordsDBTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "Positive_LookupReturnsStoredRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 111
+        },
+        {
+          "name": "Negative_LookupReturnsNullForUnknownId",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 118
+        },
+        {
+          "name": "Edge_AddingSameIdTwiceKeepsNewerRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 122
+        },
+        {
+          "name": "Errors_LookingUpUnknownPersonNeverThrows",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 128
+        }
+      ]
+    },
+    {
+      "name": "HomeAffairsServiceTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "Positive_MatchingDetailsAreVerified",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 139
+        },
+        {
+          "name": "Negative_DifferentSurnameIsNotVerified",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 143
+        },
+        {
+          "name": "Negative_DifferentDateOfBirthIsNotVerified",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 147
+        },
+        {
+          "name": "Negative_UnknownIdIsNotVerified",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 151
+        },
+        {
+          "name": "Edge_ComparisonIsCaseSensitive",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 155
+        },
+        {
+          "name": "Positive_FindRecordReturnsStoredRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 159
+        }
+      ]
+    },
+    {
+      "name": "ExamBoardAPITest",
+      "tests": 3,
+      "testsuite": [
+        {
+          "name": "Positive_ReturnsCandidateMarks",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 174
+        },
+        {
+          "name": "Negative_UnknownCandidateGivesNoResults",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 180
+        },
+        {
+          "name": "Edge_AddingSameCandidateTwiceKeepsNewerRecord",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 185
+        }
+      ]
+    },
+    {
+      "name": "FraudScreeningEngineTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "Positive_KnownPersonBaseRiskForSmallAmounts",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 202
+        },
+        {
+          "name": "Positive_UnknownPersonStartsAtPointTwo",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 206
+        },
+        {
+          "name": "Negative_FlaggedPersonIsAlwaysOne",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 210
+        },
+        {
+          "name": "Edge_ExactlyR100000AddsNothingJustAboveAddsPointOne",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 214
+        },
+        {
+          "name": "Edge_AboveR500000AddsPointTwo",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 219
+        },
+        {
+          "name": "Edge_RiskIsCappedAtOne",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 223
+        }
+      ]
+    },
+    {
+      "name": "CreditCheckAdapterTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "Positive_PassesWhenScoreMeetsMinimum",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 245
+        },
+        {
+          "name": "Negative_RejectsScoreBelowMinimum",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 255
+        },
+        {
+          "name": "Negative_FailsWhenBureauDoesNotKnowPerson",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 261
+        },
+        {
+          "name": "Edge_ScoreExactlyAtMinimumPasses",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 267
+        },
+        {
+          "name": "Errors_IdOnFormButBlankGivesMissingField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 272
+        },
+        {
+          "name": "Errors_EmptyDocumentGivesMissingFieldAndDoesNotThrow",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 280
+        }
+      ]
+    },
+    {
+      "name": "CriminalRecordAdapterTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "Positive_PersonWithNoEntryIsClean",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 298
+        },
+        {
+          "name": "Positive_EntrySayingNoRecordIsClean",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 305
+        },
+        {
+          "name": "Negative_RejectsPersonWithRecordNamingOffence",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 309
+        },
+        {
+          "name": "Errors_MissingIdGivesMissingField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 316
+        }
+      ]
+    },
+    {
+      "name": "IdentityVerificationAdapterTest",
+      "tests": 4,
+      "testsuite": [
+        {
+          "name": "Positive_PassesWhenAllFourDetailsMatch",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 333
+        },
+        {
+          "name": "Negative_RejectsWhenOneDetailDiffers",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 340
+        },
+        {
+          "name": "Errors_NamesFirstMissingField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 347
+        },
+        {
+          "name": "Edge_WithEveryFieldMissingNameIsReportedFirst",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 353
+        }
+      ]
+    },
+    {
+      "name": "QualificationAdapterTest",
+      "tests": 6,
+      "testsuite": [
+        {
+          "name": "Positive_PassesWhenEveryRequiredMarkIsMet",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 373
+        },
+        {
+          "name": "Negative_RejectsMarkBelowMinimumNamingIt",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 379
+        },
+        {
+          "name": "Negative_RejectsRequiredSubjectNotTaken",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 385
+        },
+        {
+          "name": "Negative_FailsWhenExamBoardHasNoResults",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 393
+        },
+        {
+          "name": "Edge_MarkExactlyAtMinimumPasses",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 399
+        },
+        {
+          "name": "Errors_MissingCandidateNumberGivesMissingField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 406
+        }
+      ]
+    },
+    {
+      "name": "FraudCheckAdapterTest",
+      "tests": 5,
+      "testsuite": [
+        {
+          "name": "Positive_PassesLowRiskPersonAndSmallAmount",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 423
+        },
+        {
+          "name": "Negative_RejectsFlaggedPersonWhateverTheAmount",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 430
+        },
+        {
+          "name": "Edge_RiskExactlyAtMaximumPasses",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 436
+        },
+        {
+          "name": "Positive_SameClassChecksRefundsByChangingAmountField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 441
+        },
+        {
+          "name": "Errors_AmountOnFormButBlankGivesMissingField",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 446
+        }
+      ]
+    },
+    {
+      "name": "AdapterPatternTest",
+      "tests": 1,
+      "testsuite": [
+        {
+          "name": "EveryAdapterCanBeUsedThroughExternalCheckInterface",
+          "file": "\/Users\/hafaniramagoma\/Downloads\/COS214\/Practicals\/Prac6\/prac6_latest\/COS214_Practical_6\/Adapter\/tests\/test_adapter.cpp",
+          "line": 456
+        }
+      ]
+    }
+  ]
+}

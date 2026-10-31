@@ -1,0 +1,2 @@
+/usr/bin/ar qc libcommands.a CMakeFiles/commands.dir/src/ResetNodeCommand.cpp.o CMakeFiles/commands.dir/src/ResetWorkflowCommand.cpp.o CMakeFiles/commands.dir/src/CancelWorkflowCommand.cpp.o
+/usr/bin/ranlib libcommands.a

@@ -5,13 +5,9 @@
 #include <string>
 
 #include "NodeResult.h"
+#include "NodeState.h"   // FIX 1: use Mandla's NodeState instead of a second, empty one
 
 class WorkflowInstance;
-
-class NodeState {
-public:
-    virtual ~NodeState() = default;
-};
 
 class WorkflowNode {
 private:
@@ -21,9 +17,11 @@ private:
 
 protected:
     virtual NodeResult process(WorkflowInstance& instance) = 0;
-    void setState(std::unique_ptr<NodeState> state);
 
 public:
+    /// FIX 2: public, because the concrete states call node.setState(...)
+    void setState(std::unique_ptr<NodeState> state);
+
     WorkflowNode(std::string name);
     virtual ~WorkflowNode() = default;
 
@@ -36,17 +34,16 @@ public:
 
     virtual void start();
     virtual void pass();
-    virtual void needsApproval(); // Ambigiuous / EXTRA Remove if unused
+    virtual void needsApproval();
     virtual void approve();
     virtual void reject();
     virtual void fail();
-    virtual void retry();
     virtual void cancel();
     virtual void reset();
     virtual void resetChain();
 
     virtual std::unique_ptr<WorkflowNode> clone() = 0;
-    std::unique_ptr<WorkflowNode> cloneChain(); // What?
+    std::unique_ptr<WorkflowNode> cloneChain();
 };
 
 #endif

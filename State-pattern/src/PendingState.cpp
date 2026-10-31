@@ -6,6 +6,7 @@
  *       cancel() is inherited from NodeState: Pending is not final to Cancelled.
  */
 #include "PendingState.h"
+#include "CancelledState.h"
 #include "PassedState.h"
 #include "RejectedState.h"
 #include "WorkflowNode.h"
@@ -36,6 +37,6 @@ void PendingState::reject(WorkflowNode& node) {
  * @param node this would be the current node to where the state must be changed
  * @brief Waiting to Cancelled.
  * */
-void WaitingState::cancel(WorkflowNode& node) {
+void PendingState::cancel(WorkflowNode& node) {
     node.setState(std::unique_ptr<NodeState>(new CancelledState()));
 }

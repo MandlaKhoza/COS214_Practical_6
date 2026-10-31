@@ -1,0 +1,5 @@
+if(EXISTS "/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/test_adapter_e3b0c442_tests.cmake")
+  include("/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/test_adapter_e3b0c442_tests.cmake")
+else()
+  add_test(test_adapter_NOT_BUILT test_adapter_NOT_BUILT)
+endif()

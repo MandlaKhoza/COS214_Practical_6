@@ -1,10 +1,11 @@
 #include "../inc/WorkflowInstance.h"
 
 WorkflowInstance::WorkflowInstance(const std::string& id, const std::string& type, 
-  std::shared_ptr<Document> document){
-    this->id = id;
-    this->type = type;
-    this->document = document;
+  std::shared_ptr<Document> document)
+    : id(id), document(document), status(WorkflowStatus::Created), current(nullptr), type(type) {}
+
+const std::string& WorkflowInstance::getId() const {
+    return this->id;
 }
 
 WorkflowInstance::~WorkflowInstance() = default;

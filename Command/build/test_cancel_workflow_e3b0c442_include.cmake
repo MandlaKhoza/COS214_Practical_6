@@ -1,0 +1,5 @@
+if(EXISTS "/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Command/build/test_cancel_workflow_e3b0c442_tests.cmake")
+  include("/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Command/build/test_cancel_workflow_e3b0c442_tests.cmake")
+else()
+  add_test(test_cancel_workflow_NOT_BUILT test_cancel_workflow_NOT_BUILT)
+endif()

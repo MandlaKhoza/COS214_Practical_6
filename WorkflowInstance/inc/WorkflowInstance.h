@@ -43,6 +43,7 @@ public:
                  std::shared_ptr<Document> document);
     ~WorkflowInstance();
 
+    const std::string& getId() const;
     std::shared_ptr<Document> getDocument() const;
     void setChain(std::unique_ptr<WorkflowNode> chain);
     WorkflowNode* getChain() const; // EXTRA : Remove if unused

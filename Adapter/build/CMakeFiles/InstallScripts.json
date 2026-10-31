@@ -1,0 +1,10 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/cmake_install.cmake",
+		"/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/_deps/googletest-build/cmake_install.cmake",
+		"/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/_deps/googletest-build/googlemock/cmake_install.cmake",
+		"/Users/hafaniramagoma/Downloads/COS214/Practicals/Prac6/prac6_latest/COS214_Practical_6/Adapter/build/_deps/googletest-build/googletest/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
