@@ -8,6 +8,8 @@
 #include "ResetNodeCommand.h"
 #include "WorkflowNode.h"
 #include "WorkflowInstance.h"
+#include <stdexcept>
+#include <string>
 
 
 ResetWorkflowCommand::ResetWorkflowCommand(WorkflowInstance* instance) : instance(instance){}
@@ -19,10 +21,17 @@ bool ResetWorkflowCommand::execute() {
 	if (instance->isCancelled())
 		return false;
 
-	//enabled the macro command where we do a ResetNodeCommand per node in this particular instance.
+	//pass 1: check that every node can be reset BEFORE changing any of them,
+	//so a refusal leaves the whole workflow exactly as it was (all-or-nothing)
+	for (WorkflowNode* node = instance->getChain(); node != nullptr; node = node->getNext()){
+		std::string state = node->getStateName();
+		if (state == "Cancelled" || state == "InProgress")
+			throw std::logic_error("Cannot reset: " + node->getName() + " is " + state);
+	}
+
+	//pass 2: safe now, so build one ResetNodeCommand per node (the macro command)
 	children.clear();
 	for (WorkflowNode* node = instance->getChain(); node != nullptr; node = node->getNext()){
-		//building the workflow again, node by node
 		children.push_back(std::unique_ptr<Command>(new ResetNodeCommand(node)));
 	}
 

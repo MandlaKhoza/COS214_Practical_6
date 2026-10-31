@@ -37,6 +37,8 @@ public:
      * @post Every node is in Waiting; the instance's status is Created and its current node is the first node.
      * @retval true  The workflow was reset.
      * @retval false No instance, the instance is cancelled, or a node refused.
+     *  * @throws std::logic_error If any node is Cancelled or InProgress; checked before
+ *         any node is changed, so a refused reset leaves the workflow untouched.
      */
     bool execute();
 
