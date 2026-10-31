@@ -17,16 +17,22 @@ class Comparable {
         bool compare (double value) {
             if (this->operand == "=") {
                 if (value == conditionValue) return true;
+                else return false;
             } else if (this->operand == "!=") {
                 if (value != conditionValue) return true;
+                else return false;
             } else if (this->operand == ">") {
                 if (value > conditionValue) return true;
+                else return false;
             } else if (this->operand == ">=") {
                 if (value >= conditionValue) return true;
+                else return false;
             } else if (this->operand == "<") {
                 if (value < conditionValue) return true;
+                else return false;
             } else if (this->operand == "<=") {
                 if (value <= conditionValue) return true;
+                else return false;
             }
 
             std::cout << "Invalid operand for Comparable" << std::endl;
