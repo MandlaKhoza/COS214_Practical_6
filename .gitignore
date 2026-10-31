@@ -1,2 +1,14 @@
-docs/
-docs/
+# CMake build output
+build/
+
+# Doxygen generated output
+docs/html/
+docs/latex/
+
+# Compiled files
+*.o
+*.exe
+
+# IDE folders
+.vscode/
+.idea/
