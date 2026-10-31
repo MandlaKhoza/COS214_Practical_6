@@ -11,7 +11,7 @@ protected:
     NodeResult process(WorkflowInstance& instance) override;
 
 public:
-    explicit DocCompletionCheckNode( std::string name);
+    explicit DocCompletionCheckNode(std::string name);
     std::unique_ptr<WorkflowNode> clone() override;
 };
 

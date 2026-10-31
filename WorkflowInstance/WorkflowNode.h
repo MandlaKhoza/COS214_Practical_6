@@ -17,8 +17,6 @@ private:
 
 protected:
     virtual NodeResult process(WorkflowInstance& instance) = 0;
-    virtual bool validateInput(WorkflowInstance& instance, std::string reason) = 0;
-    virtual void recordHistory(WorkflowInstance& instance, NodeResult result) = 0;
     void setState(std::unique_ptr<NodeState> state);
 
 public:

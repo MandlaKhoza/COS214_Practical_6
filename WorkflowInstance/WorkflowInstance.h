@@ -6,7 +6,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include "Document.h"
+#include "../DocumentBuilder/Document.h"
 #include "WorkflowNode.h"
 #include "NodeResult.h"
 

@@ -21,13 +21,13 @@ WorkflowNode* WorkflowInstance::getChain() const{
 
 void WorkflowInstance::run(){
   HandleResult result; //TODO double check
-  result = this->chain->handle(this);
+  result = this->chain->handle(*this);
 }
 
 void WorkflowInstance::resume(){
 //Most likely does the same as run
   HandleResult result;
-  result = this->chain->handle(this);
+  result = this->chain->handle(*this);
 }
 
 void WorkflowInstance::reset(){

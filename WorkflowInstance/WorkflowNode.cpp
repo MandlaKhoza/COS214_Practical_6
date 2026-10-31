@@ -49,7 +49,7 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
         //     cancel();
             // instance.cancel();
             // return HandleResult::CANCELLED;
-    // }     
+    // }
   // }
     NodeResult nodeRes = process(instance);
 

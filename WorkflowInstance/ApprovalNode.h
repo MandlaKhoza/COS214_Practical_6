@@ -16,9 +16,9 @@ protected:
     NodeResult process(WorkflowInstance& instance) override;
 
 public:
-    ApprovalNode(const std::string& name,
+    ApprovalNode(std::string name,
                  std::shared_ptr<ApprovalChain> approvals);
-    std::unique_ptr<WorkflowNode> clone() const override;
+    std::unique_ptr<WorkflowNode> clone() override;
 };
 
 #endif

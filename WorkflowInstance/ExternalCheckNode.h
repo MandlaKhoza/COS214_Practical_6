@@ -16,9 +16,9 @@ protected:
     NodeResult process(WorkflowInstance& instance) override;
 
 public:
-    ExternalCheckNode(const std::string& name,
+    ExternalCheckNode(std::string name,
                       std::shared_ptr<ExternalCheck> check);
-    std::unique_ptr<WorkflowNode> clone() const override;
+    std::unique_ptr<WorkflowNode> clone() override;
 };
 
 #endif

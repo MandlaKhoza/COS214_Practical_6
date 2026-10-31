@@ -1,8 +1,7 @@
 #include "DocCompletionCheckNode.h"
 
-DocCompletionCheckNode::DocCompletionCheckNode(std::string name):WorkflowNode(std::move(name)){
-  //TODO, how to properly initialise a these concreteNodes
-}
+DocCompletionCheckNode::DocCompletionCheckNode(std::string name) : WorkflowNode(name){}
+
 NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi){
   std::map<std::string,std::string> commonFields = wi.getDocument()->getCommon();
   std::map<std::string, double> comparableFields = wi.getDocument()->getComparable();
