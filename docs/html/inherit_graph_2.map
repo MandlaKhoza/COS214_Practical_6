@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classAccountView.html" title="subject interface for the proxy pattern RealAccount and AccountProxy implement it,..." alt="" coords="5,31,112,56"/>
+<area shape="rect" id="Node000001" href="$classAccountProxy.html" title="Proxy of the Proxy pattern: controls who may view an account." alt="" coords="160,5,271,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="125,30,159,24,160,30,126,35"/>
+<area shape="rect" id="Node000002" href="$classRealAccount.html" title="RealSubject of the Proxy pattern: the actual account view." alt="" coords="164,55,267,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="126,51,164,57,163,62,125,56"/>
+</map>

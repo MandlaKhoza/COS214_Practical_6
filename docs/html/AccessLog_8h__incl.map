@@ -1,0 +1,17 @@
+<map id="proxy/inc/AccessLog.h" name="proxy/inc/AccessLog.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="127,5,293,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,68,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,33,79,76,77,71,181,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="233,152,291,177"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="218,30,238,78,257,138,252,139,233,80,213,32"/>
+<area shape="rect" id="Node000004" href="$AccessAttempt_8h.html" title=" " alt="" coords="92,79,224,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="204,33,177,69,172,66,199,29"/>
+<area shape="rect" id="Node000006" href="$Requester_8h.html" title=" " alt="" coords="299,79,398,104"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="233,28,315,70,313,75,231,33"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="176,102,235,142,232,146,173,106"/>
+<area shape="rect" id="Node000005" href="$AccessLevel_8h.html" title=" " alt="" coords="94,152,209,177"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="160,105,156,139,151,138,154,104"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="336,106,288,145,285,141,333,102"/>
+<area shape="rect" id="Node000007" href="$UserRole_8h.html" title=" " alt="" coords="315,152,409,177"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="353,104,360,138,355,139,348,105"/>
+</map>

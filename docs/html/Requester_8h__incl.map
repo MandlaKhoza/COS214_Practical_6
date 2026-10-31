@@ -1,7 +1,7 @@
-<map id="proxy/struct/Requester.h" name="proxy/struct/Requester.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,187,31"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="17,79,76,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,33,65,69,60,66,86,29"/>
-<area shape="rect" id="Node000003" href="$UserRole_8h.html" title=" " alt="" coords="100,79,193,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="107,29,133,66,128,69,102,33"/>
+<map id="proxy/inc/Requester.h" name="proxy/inc/Requester.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,168,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="8,79,67,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,33,55,69,51,66,76,29"/>
+<area shape="rect" id="Node000003" href="$UserRole_8h.html" title=" " alt="" coords="91,79,184,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="97,29,123,66,119,69,93,33"/>
 </map>

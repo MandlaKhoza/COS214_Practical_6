@@ -1,0 +1,21 @@
+<map id="proxy/src/AccessLog.cpp" name="proxy/src/AccessLog.cpp">
+<area shape="rect" id="Node000001" title=" " alt="" coords="66,5,247,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="75,79,134,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="150,33,123,69,119,66,146,29"/>
+<area shape="rect" id="Node000003" href="$AccessLog_8h.html" title=" " alt="" coords="159,79,261,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,29,195,66,191,69,163,33"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,152,68,177"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="183,106,79,149,77,144,181,102"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="233,225,291,251"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="218,103,238,151,257,211,252,213,233,153,213,105"/>
+<area shape="rect" id="Node000006" href="$AccessAttempt_8h.html" title=" " alt="" coords="92,152,224,177"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="204,106,177,142,172,139,199,103"/>
+<area shape="rect" id="Node000008" href="$Requester_8h.html" title=" " alt="" coords="299,152,398,177"/>
+<area shape="poly" id="edge8_Node000003_Node000008" title=" " alt="" coords="233,102,315,143,313,148,231,106"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="176,175,235,215,232,219,173,180"/>
+<area shape="rect" id="Node000007" href="$AccessLevel_8h.html" title=" " alt="" coords="94,225,209,251"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="160,178,156,212,151,212,154,177"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="336,179,288,219,285,214,333,175"/>
+<area shape="rect" id="Node000009" href="$UserRole_8h.html" title=" " alt="" coords="315,225,409,251"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="353,177,360,211,355,212,348,178"/>
+</map>

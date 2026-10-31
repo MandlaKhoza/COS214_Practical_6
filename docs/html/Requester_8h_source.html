@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Tividy: proxy/struct/Requester.h Source File</title>
+<title>Tividy: proxy/inc/Requester.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -74,7 +74,7 @@ $(document).ready(function() { init_codefold(0); });
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="dir_7a2131a69bc86e97126b7dfcc8cd9166.html">proxy</a></li><li class="navelem"><a class="el" href="dir_16d850e99c6ef626a8aa8233d7a72c0d.html">struct</a></li>  </ul>
+<li class="navelem"><a class="el" href="dir_7a2131a69bc86e97126b7dfcc8cd9166.html">proxy</a></li><li class="navelem"><a class="el" href="dir_bcbaca288148e08f278468b95f0ee6ec.html">inc</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -88,32 +88,37 @@ $(document).ready(function() { init_codefold(0); });
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="preprocessor">#include &quot;<a class="code" href="UserRole_8h.html">UserRole.h</a>&quot;</span></div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span> </div>
-<div class="foldopen" id="foldopen00008" data-start="{" data-end="};">
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="structRequester.html">    8</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structRequester.html">Requester</a></div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>{</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>        <span class="comment">//members</span></div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">   12</a></span>        std::string <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>;</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno"><a class="line" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">   13</a></span>        <a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a> <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>;</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
-<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span>        <span class="comment">//functions</span></div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structRequester.html#a7d677535c2348091918910eb491073ba">   16</a></span>        <a class="code hl_function" href="structRequester.html#a7d677535c2348091918910eb491073ba">Requester</a>(): <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>(), <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>(<a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a>::<a class="code hl_enumvalue" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4">Client</a>) {}</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">   17</a></span>        <a class="code hl_function" href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">Requester</a>(<span class="keyword">const</span> std::string&amp; uId, <span class="keyword">const</span> <a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a>  r) : <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>(uId), <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>(r){}</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>         </div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>};</div>
+<div class="foldopen" id="foldopen00011" data-start="{" data-end="};">
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno"><a class="line" href="structRequester.html">   11</a></span><span class="keyword">struct </span><a class="code hl_struct" href="structRequester.html">Requester</a></div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>{</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>        <span class="comment">//members</span></div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">   16</a></span>        std::string <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">   19</a></span>        <a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a> <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>;</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>        <span class="comment">//functions</span></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="comment">        /***</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="comment">         * @brief default constructor that sets the default role to client</span></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="comment">         */</span></div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno"><a class="line" href="structRequester.html#a7d677535c2348091918910eb491073ba">   25</a></span>        <a class="code hl_function" href="structRequester.html#a7d677535c2348091918910eb491073ba">Requester</a>(): <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>(), <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>(<a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a>::<a class="code hl_enumvalue" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4">Client</a>) {}</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno"><a class="line" href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">   32</a></span>        <a class="code hl_function" href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">Requester</a>(<span class="keyword">const</span> std::string&amp; uId, <span class="keyword">const</span> <a class="code hl_enumeration" href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a>  r) : <a class="code hl_variable" href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">userId</a>(uId), <a class="code hl_variable" href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">role</a>(r){}</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>         </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>};</div>
 </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span> </div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="aUserRole_8h_html"><div class="ttname"><a href="UserRole_8h.html">UserRole.h</a></div></div>
-<div class="ttc" id="aUserRole_8h_html_a00dd1c1a522bd6fb15ecc021ffefb775"><div class="ttname"><a href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a></div><div class="ttdeci">UserRole</div><div class="ttdef"><b>Definition</b> UserRole.h:5</div></div>
-<div class="ttc" id="aUserRole_8h_html_a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4"><div class="ttname"><a href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4">UserRole::Client</a></div><div class="ttdeci">@ Client</div></div>
-<div class="ttc" id="astructRequester_html"><div class="ttname"><a href="structRequester.html">Requester</a></div><div class="ttdef"><b>Definition</b> Requester.h:9</div></div>
-<div class="ttc" id="astructRequester_html_a15febc9889f0cd02d1b02608d2eba804"><div class="ttname"><a href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">Requester::userId</a></div><div class="ttdeci">std::string userId</div><div class="ttdef"><b>Definition</b> Requester.h:12</div></div>
-<div class="ttc" id="astructRequester_html_a7d677535c2348091918910eb491073ba"><div class="ttname"><a href="structRequester.html#a7d677535c2348091918910eb491073ba">Requester::Requester</a></div><div class="ttdeci">Requester()</div><div class="ttdef"><b>Definition</b> Requester.h:16</div></div>
-<div class="ttc" id="astructRequester_html_a982a790dedf302f3ac77564cd26bf5a4"><div class="ttname"><a href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">Requester::Requester</a></div><div class="ttdeci">Requester(const std::string &amp;uId, const UserRole r)</div><div class="ttdef"><b>Definition</b> Requester.h:17</div></div>
-<div class="ttc" id="astructRequester_html_ad4ebdfd96fd05342332a5de0a2b0636c"><div class="ttname"><a href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">Requester::role</a></div><div class="ttdeci">UserRole role</div><div class="ttdef"><b>Definition</b> Requester.h:13</div></div>
+<div class="ttc" id="aUserRole_8h_html_a00dd1c1a522bd6fb15ecc021ffefb775"><div class="ttname"><a href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775">UserRole</a></div><div class="ttdeci">UserRole</div><div class="ttdoc">The different types of user roles.</div><div class="ttdef"><b>Definition</b> UserRole.h:8</div></div>
+<div class="ttc" id="aUserRole_8h_html_a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4"><div class="ttname"><a href="UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775a577d7068826de925ea2aec01dbadf5e4">UserRole::Client</a></div><div class="ttdeci">@ Client</div><div class="ttdoc">user that uses the workflow, full access to own account</div></div>
+<div class="ttc" id="astructRequester_html"><div class="ttname"><a href="structRequester.html">Requester</a></div><div class="ttdoc">Contains info on the user trying to access the account.</div><div class="ttdef"><b>Definition</b> Requester.h:12</div></div>
+<div class="ttc" id="astructRequester_html_a15febc9889f0cd02d1b02608d2eba804"><div class="ttname"><a href="structRequester.html#a15febc9889f0cd02d1b02608d2eba804">Requester::userId</a></div><div class="ttdeci">std::string userId</div><div class="ttdoc">ID of user trying to access the account.</div><div class="ttdef"><b>Definition</b> Requester.h:16</div></div>
+<div class="ttc" id="astructRequester_html_a7d677535c2348091918910eb491073ba"><div class="ttname"><a href="structRequester.html#a7d677535c2348091918910eb491073ba">Requester::Requester</a></div><div class="ttdeci">Requester()</div><div class="ttdef"><b>Definition</b> Requester.h:25</div></div>
+<div class="ttc" id="astructRequester_html_a982a790dedf302f3ac77564cd26bf5a4"><div class="ttname"><a href="structRequester.html#a982a790dedf302f3ac77564cd26bf5a4">Requester::Requester</a></div><div class="ttdeci">Requester(const std::string &amp;uId, const UserRole r)</div><div class="ttdoc">creates a requester</div><div class="ttdef"><b>Definition</b> Requester.h:32</div></div>
+<div class="ttc" id="astructRequester_html_ad4ebdfd96fd05342332a5de0a2b0636c"><div class="ttname"><a href="structRequester.html#ad4ebdfd96fd05342332a5de0a2b0636c">Requester::role</a></div><div class="ttdeci">UserRole role</div><div class="ttdoc">user role of user trying to access the account</div><div class="ttdef"><b>Definition</b> Requester.h:19</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

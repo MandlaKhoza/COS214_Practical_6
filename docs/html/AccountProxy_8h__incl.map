@@ -1,0 +1,32 @@
+<map id="proxy/inc/AccountProxy.h" name="proxy/inc/AccountProxy.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="306,5,491,31"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,79,83,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="342,33,97,82,95,77,341,28"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="425,225,484,251"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="425,28,460,47,499,74,537,108,566,151,570,164,568,177,552,198,527,215,498,227,496,222,524,210,549,194,563,175,565,165,562,153,533,112,496,78,457,51,423,33"/>
+<area shape="rect" id="Node000004" href="$Requester_8h.html" title=" " alt="" coords="157,152,256,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="385,33,235,146,231,141,381,29"/>
+<area shape="rect" id="Node000006" href="$AccessLevel_8h.html" title=" " alt="" coords="284,225,399,251"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="344,33,294,49,239,73,187,107,166,129,148,153,143,165,147,176,166,190,196,202,271,222,269,227,194,207,163,194,143,179,138,165,143,151,162,125,184,103,236,68,292,44,342,28"/>
+<area shape="rect" id="Node000007" href="$AccountView_8h.html" title=" " alt="" coords="677,152,795,177"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="492,24,620,42,675,57,712,77,723,90,731,106,738,137,733,138,726,108,719,93,709,81,673,62,619,47,491,29"/>
+<area shape="rect" id="Node000008" href="$AccessLog_8h.html" title=" " alt="" coords="347,79,450,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="401,31,401,65,396,65,396,31"/>
+<area shape="rect" id="Node000011" href="$RealAccount_8h.html" title=" " alt="" coords="584,79,699,104"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="438,28,590,72,588,77,437,33"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="247,175,413,222,411,227,246,180"/>
+<area shape="rect" id="Node000005" href="$UserRole_8h.html" title=" " alt="" coords="160,225,253,251"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="209,178,209,212,204,212,204,178"/>
+<area shape="poly" id="edge8_Node000007_Node000003" title=" " alt="" coords="691,180,498,229,497,223,690,175"/>
+<area shape="poly" id="edge11_Node000008_Node000003" title=" " alt="" coords="407,103,428,151,449,211,444,213,423,153,402,105"/>
+<area shape="poly" id="edge15_Node000008_Node000004" title=" " alt="" coords="369,107,252,149,250,144,367,102"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="489,152,551,177"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="420,102,490,143,487,147,417,106"/>
+<area shape="rect" id="Node000010" href="$AccessAttempt_8h.html" title=" " alt="" coords="281,152,413,177"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="392,106,365,142,361,139,388,103"/>
+<area shape="poly" id="edge13_Node000010_Node000003" title=" " alt="" coords="365,175,427,215,424,220,363,180"/>
+<area shape="poly" id="edge14_Node000010_Node000006" title=" " alt="" coords="348,178,346,212,341,212,343,177"/>
+<area shape="poly" id="edge18_Node000011_Node000003" title=" " alt="" coords="642,105,633,141,624,161,610,179,584,199,555,214,499,232,497,227,553,209,581,195,606,175,619,158,628,139,637,103"/>
+<area shape="poly" id="edge19_Node000011_Node000007" title=" " alt="" coords="658,102,711,141,708,146,655,106"/>
+<area shape="poly" id="edge17_Node000011_Node000009" title=" " alt="" coords="623,106,553,147,550,143,620,102"/>
+</map>

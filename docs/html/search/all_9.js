@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['sequentialsignoff_0',['SequentialSignOff',['../ApprovalPolicy_8h.html#ae3930eeb0e88478483a937a87d4f90d4a6ef669a0c7b7b38eea8577615a935e26',1,'ApprovalPolicy.h']]],
-  ['setnext_1',['setNext',['../classApprover.html#a5ec8b5456fcf447e63ae2f3342742c39',1,'Approver']]]
+  ['userid_0',['userid',['../structAccessAttempt.html#a9e20de25684b56e012ea92d0d67e0cf9',1,'AccessAttempt::userId'],['../structRequester.html#a15febc9889f0cd02d1b02608d2eba804',1,'Requester::userId']]],
+  ['userrole_1',['UserRole',['../UserRole_8h.html#a00dd1c1a522bd6fb15ecc021ffefb775',1,'UserRole.h']]],
+  ['userrole_2eh_2',['UserRole.h',['../UserRole_8h.html',1,'']]]
 ];

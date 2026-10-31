@@ -1,0 +1,7 @@
+<map id="AccountView" name="AccountView">
+<area shape="rect" id="Node000001" title="subject interface for the proxy pattern RealAccount and AccountProxy implement it,..." alt="" coords="73,5,179,31"/>
+<area shape="rect" id="Node000002" href="$classAccountProxy.html" title="Proxy of the Proxy pattern: controls who may view an account." alt="" coords="5,79,116,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="108,43,73,80,69,77,104,39"/>
+<area shape="rect" id="Node000003" href="$classRealAccount.html" title="RealSubject of the Proxy pattern: the actual account view." alt="" coords="140,79,243,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="148,39,183,77,179,80,144,43"/>
+</map>
