@@ -40,3 +40,11 @@ void PendingState::reject(WorkflowNode& node) {
 void PendingState::cancel(WorkflowNode& node) {
     node.setState(std::unique_ptr<NodeState>(new CancelledState()));
 }
+
+/**
+ * @param node this would be the current node to where the state must be changed
+ * @brief Pending to Waiting (the decision is withdrawn; the node starts over).
+ * */
+void PendingState::reset(WorkflowNode& node) {
+    node.setState(std::unique_ptr<NodeState>(new WaitingState()));
+}

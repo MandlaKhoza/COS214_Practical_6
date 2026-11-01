@@ -10,6 +10,7 @@ public:
     void approve(WorkflowNode& node);
     void reject(WorkflowNode& node);
     void cancel(WorkflowNode& node);
+    void reset(WorkflowNode& node);
 };
 
 #endif
