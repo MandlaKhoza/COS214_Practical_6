@@ -18,8 +18,8 @@ struct HistoryEntry{
     std::string message;
 };
 
-#include "WorkflowEnums.h"    // Outcome (Observer pattern)
-#include "WorkflowSubject.h"
+#include "../../observer/inc/WorkflowEnums.h"    // Outcome (Observer pattern)
+#include "../../observer/inc/WorkflowSubject.h"
 
 /// @brief Where a workflow instance is in its life (the only definition in the project).
 enum class WorkflowStatus { Created, Running, Approved, Rejected, Cancelled };
@@ -34,7 +34,7 @@ private:
     std::unique_ptr<WorkflowNode> chain;
     WorkflowNode* current;
     std::string rejectedAt;
-    std::string type;  
+    std::string type;
 public:
    WorkflowInstance(const std::string& id,
                  const std::string& type,

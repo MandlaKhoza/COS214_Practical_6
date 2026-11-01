@@ -5,7 +5,7 @@
 #include <string>
 
 #include "NodeResult.h"
-#include "NodeState.h"   // FIX 1: use Mandla's NodeState instead of a second, empty one
+#include "../../State-pattern/inc/NodeState.h"  //Uses the State's Node State
 
 class WorkflowInstance;
 
