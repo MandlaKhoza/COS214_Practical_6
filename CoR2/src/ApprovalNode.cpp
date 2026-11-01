@@ -4,6 +4,8 @@
 #include "../../WorkflowInstance/inc/WorkflowInstance.h"
 #include "../inc/ApprovalRequest.h"
 #include "../inc/ApprovalDecision.h"
+#include "approval_prompt.hpp"
+#include "ui_logger.hpp"
 
 
 /**
@@ -35,9 +37,20 @@ std::unique_ptr<WorkflowNode> ApprovalNode::clone() {
 
 NodeResult ApprovalNode::process(WorkflowInstance& wi)
 {
+    UI_LOG("[APPROVAL] Awaiting human approval before continuing the chain...");
+    const bool humanApproved = ApprovalPrompt::instance().waitForDecision(
+        "ApprovalNode '" + getName() + "' needs a Yes/No decision."
+    );
+    if (!humanApproved) {
+        UI_LOG("[APPROVAL] Human rejected the request");
+        return NodeResult{HandleResult::REJECTED, "Rejected by human operator"};
+    }
+    UI_LOG("[APPROVAL] Human approved; submitting to the approval chain");
+
     // Fail-safe: no chain configured means nobody can approve
     if (!approvals)
     {
+        UI_LOG("[APPROVAL] No approval chain configured");
         return NodeResult{HandleResult::REJECTED, "No approval chain configured"};
     }
 
@@ -52,12 +65,15 @@ NodeResult ApprovalNode::process(WorkflowInstance& wi)
     // finalDecision is only ever Approved or Rejected
     if (request.finalDecision == ApprovalDecision::Approved)
     {
+        UI_LOG("[APPROVAL] Approved by " + request.decidedBy);
         return NodeResult{HandleResult::PASSED, "Approved by " + request.decidedBy};
     }
 
     if (request.decidedBy.empty())
     {
+        UI_LOG("[APPROVAL] Rejected: no approver decided");
         return NodeResult{HandleResult::REJECTED, "Rejected: no approver decided"};
     }
+    UI_LOG("[APPROVAL] Rejected by " + request.decidedBy);
     return NodeResult{HandleResult::REJECTED, "Rejected by " + request.decidedBy};
 }

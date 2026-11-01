@@ -1,12 +1,16 @@
 #include "tui_app.hpp"
 #include "ui_logger.hpp"
+#include "approval_prompt.hpp"
 
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/component_options.hpp>
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 
+#include <atomic>
+#include <exception>
 #include <string>
+#include <thread>
 #include <vector>
 
 void TUI::addCommonField(const std::string& name) {
@@ -39,6 +43,57 @@ bool TUI::hasFields() const {
     return !common_names_.empty() || !comparable_names_.empty();
 }
 
+namespace {
+
+ftxui::Element render_log_line(const std::string& log) {
+    using namespace ftxui;
+    struct PrefixColor {
+        const char* prefix;
+        Color color;
+    };
+    const PrefixColor table[] = {
+        {"[DOC]", Color::Cyan},
+        {"[RANGE]", Color::Yellow},
+        {"[EXTERNAL]", Color::Magenta},
+        {"[APPROVAL]", Color::Green},
+        {"[WF]", Color::Blue},
+        {"[TUI]", Color::White},
+        {"[PASS]", Color::Green},
+        {"[FAIL]", Color::Red},
+        {"[NOTIFY]", Color::GrayLight}
+    };
+    const std::size_t count = sizeof(table) / sizeof(table[0]);
+    for (std::size_t i = 0; i < count; ++i) {
+        const std::string prefix = table[i].prefix;
+        if (log.compare(0, prefix.size(), prefix) == 0) {
+            return hbox({
+                text(prefix) | bold | color(table[i].color),
+                text(log.substr(prefix.size()))
+            });
+        }
+    }
+    return text(log);
+}
+
+ftxui::Elements render_logs(bool last_eight) {
+    using namespace ftxui;
+    Elements log_elements;
+    const std::vector<std::string> logs = UILogger::instance().get_logs();
+    std::size_t start = 0;
+    if (last_eight && logs.size() > 8) {
+        start = logs.size() - 8;
+    }
+    for (std::size_t i = start; i < logs.size(); ++i) {
+        log_elements.push_back(render_log_line(logs[i]));
+    }
+    if (log_elements.empty()) {
+        log_elements.push_back(text("Waiting for a document...") | dim);
+    }
+    return log_elements;
+}
+
+} // namespace
+
 void TUI::run(std::function<void()> on_run_workflow) {
     using namespace ftxui;
 
@@ -48,7 +103,7 @@ void TUI::run(std::function<void()> on_run_workflow) {
     auto labeled = [](const std::string& label, Component input) {
         return Renderer(input, [label, input] {
             return hbox({
-                text(label) | size(WIDTH, EQUAL, 12) | color(Color::Cyan),
+                text(label) | size(WIDTH, EQUAL, 22) | color(Color::Cyan),
                 text(" "),
                 input->Render() | flex
             });
@@ -63,13 +118,38 @@ void TUI::run(std::function<void()> on_run_workflow) {
         form_children.push_back(labeled(name, Input(&comparable_values_[name], "number")));
     }
 
-    auto run_button = Button(" Run workflow ", [&] {
-        UI_LOG("Run workflow clicked — copying TUI values into the Document.");
-        if (on_run_workflow) {
-            on_run_workflow();
+    std::thread worker;
+    std::atomic<bool> running(false);
+
+    auto join_worker = [&worker]() {
+        if (worker.joinable()) {
+            worker.join();
         }
+    };
+
+    auto run_button = Button(" Run Workflow ", [&] {
+        if (running.exchange(true)) {
+            UI_LOG("[TUI] Workflow already running.");
+            return;
+        }
+        join_worker();
+        UI_LOG("[TUI] Run Workflow clicked — copying TUI values into the Document.");
+        worker = std::thread([&] {
+            try {
+                if (on_run_workflow) {
+                    on_run_workflow();
+                }
+            } catch (const std::exception& e) {
+                UI_LOG(std::string("[WF] Exception: ") + e.what());
+            }
+            running = false;
+            UILogger::instance().request_redraw();
+        });
     });
-    auto quit_button = Button(" Quit ", screen.ExitLoopClosure());
+    auto quit_button = Button(" Quit ", [&] {
+        ApprovalPrompt::instance().answer(false);
+        screen.Exit();
+    });
     form_children.push_back(Container::Horizontal({ run_button, quit_button }));
 
     auto form = Container::Vertical(std::move(form_children));
@@ -81,42 +161,93 @@ void TUI::run(std::function<void()> on_run_workflow) {
         if (!hasFields()) {
             body.push_back(text("No fields registered. DocumentBuilder::populateTUI was not called.") | dim);
         } else {
-            body.push_back(text("Fields created by DocumentBuilder. Fill them, then Run workflow.") | dim);
+            body.push_back(text("Fields created by DocumentBuilder. Fill them, then Run Workflow.") | dim);
+            body.push_back(text("Demo: examCandidateNumber=EXAM-2026-001, aps=36 (faculty requires 35).") | dim);
             body.push_back(separator());
             body.push_back(form->Render() | flex);
         }
         return vbox(std::move(body)) | border | flex;
     });
 
-    auto pane_logs = Renderer([&] {
-        Elements log_elements;
-        for (const auto& log : UILogger::instance().get_logs()) {
-            log_elements.push_back(text(log));
-        }
-        if (log_elements.empty()) {
-            log_elements.push_back(text("Waiting for a document...") | dim);
-        }
+    auto tab1 = Renderer(pane_doc, [&] {
         return vbox({
-            text(" Execution Console ") | bold | bgcolor(Color::Blue),
-            separator(),
-            vbox(std::move(log_elements)) | yframe | flex
-        }) | border | flex;
-    });
-
-    auto layout = Container::Vertical({ pane_doc, pane_logs });
-    auto renderer = Renderer(layout, [&] {
-        return vbox({
-            hbox({
-                text(" DEMO SUITE ") | bold | bgcolor(Color::Cyan) | color(Color::Black),
-                separator(),
-                text(" Tab between fields. Run workflow copies values into the Document.") | dim
-            }),
-            separator(),
             pane_doc->Render() | flex,
-            pane_logs->Render() | flex
+            vbox({
+                text(" Live Logs ") | bold | bgcolor(Color::Blue),
+                separator(),
+                vbox(render_logs(true)) | yframe | vscroll_indicator | size(HEIGHT, EQUAL, 8)
+            }) | border
         });
     });
 
-    UI_LOG("Document section populated from commonFields and comparableFields.");
-    screen.Loop(renderer);
+    auto tab2 = Renderer([&] {
+        return vbox({
+            text(" System Output Console ") | bold | bgcolor(Color::Blue),
+            separator(),
+            vbox(render_logs(false)) | yframe | vscroll_indicator | flex
+        }) | border | flex;
+    });
+
+    int tab_index = 0;
+    std::vector<std::string> tab_labels;
+    tab_labels.push_back("Document Builder & Controls");
+    tab_labels.push_back("System Output Console");
+    auto tab_toggle = Toggle(&tab_labels, &tab_index);
+    auto tab_content = Container::Tab({ tab1, tab2 }, &tab_index);
+
+    auto layout = Container::Vertical({ tab_toggle, tab_content });
+    auto renderer = Renderer(layout, [&] {
+        return vbox({
+            hbox({
+                text(" TIVIDY ") | bold | bgcolor(Color::Cyan) | color(Color::Black),
+                separator(),
+                tab_toggle->Render() | flex
+            }),
+            separator(),
+            tab_content->Render() | flex
+        });
+    });
+
+    bool show_popup = false;
+    ApprovalPrompt::instance().setNotifier([&] {
+        screen.Post([&] { show_popup = true; });
+    });
+    auto yes_button = Button(" Yes ", [&] {
+        UI_LOG("[APPROVAL] Human selected Yes.");
+        ApprovalPrompt::instance().answer(true);
+        show_popup = false;
+    });
+    auto no_button = Button(" No ", [&] {
+        UI_LOG("[APPROVAL] Human selected No.");
+        ApprovalPrompt::instance().answer(false);
+        show_popup = false;
+    });
+    auto modal_buttons = Container::Horizontal({ yes_button, no_button });
+    auto modal = Renderer(modal_buttons, [&] {
+        return vbox({
+            text(" Approval required ") | bold | color(Color::Yellow),
+            separator(),
+            text(ApprovalPrompt::instance().message()),
+            separator(),
+            text("Approve this step and continue the workflow?") | dim,
+            separator(),
+            modal_buttons->Render() | center
+        }) | border | color(Color::Yellow) | size(WIDTH, GREATER_THAN, 40);
+    });
+
+    auto app = CatchEvent(renderer, [&](Event) {
+        if (ApprovalPrompt::instance().isPending()) {
+            show_popup = true;
+        }
+        return false;
+    });
+    app |= Modal(modal, &show_popup);
+
+    UI_LOG("[TUI] Document section populated from commonFields and comparableFields.");
+    screen.Loop(app);
+
+    ApprovalPrompt::instance().setNotifier(nullptr);
+    ApprovalPrompt::instance().answer(false);
+    join_worker();
+    UILogger::instance().set_screen(nullptr);
 }

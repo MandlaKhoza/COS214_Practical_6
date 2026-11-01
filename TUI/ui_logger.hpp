@@ -18,22 +18,35 @@ public:
         screen_ = screen;
     }
 
+    bool has_screen() const {
+        std::lock_guard<std::mutex> lock(mutex_);
+        return screen_ != nullptr;
+    }
+
+    void request_redraw() {
+        ftxui::ScreenInteractive* screen = nullptr;
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            screen = screen_;
+        }
+        if (screen) {
+            screen->PostEvent(ftxui::Event::Custom);
+        }
+    }
+
     // Write a log line (Thread-Safe)
     void log(const std::string& msg) {
         {
             std::lock_guard<std::mutex> lock(mutex_);
             logs_.push_back(msg);
-            
+
             // Ring Buffer Cap: Keep memory usage low
             if (logs_.size() > 100) {
                 logs_.erase(logs_.begin());
             }
         }
 
-        // Tell FTXUI to redraw immediately
-        if (screen_) {
-            screen_->PostEvent(ftxui::Event::Custom);
-        }
+        request_redraw();
     }
 
     // Retrieve logs for rendering (Thread-Safe)
@@ -44,7 +57,7 @@ public:
 
 private:
     UILogger() = default; // Private constructor prevents duplicate instances
-    std::mutex mutex_;
+    mutable std::mutex mutex_;
     std::vector<std::string> logs_;
     ftxui::ScreenInteractive* screen_ = nullptr;
 };

@@ -1,4 +1,5 @@
 #include "../inc/WorkflowInstance.h"
+#include "ui_logger.hpp"
 
 namespace {
 /// @brief Readable name of a status, for the history.
@@ -40,6 +41,7 @@ void WorkflowInstance::run() {
     if(!chain){
         throw std::logic_error("Cannot run workflow: no chain configured");
     }
+    UI_LOG("[WF] Running workflow '" + id + "'");
     markRunning();
     chain->handle(*this);
 }
@@ -94,6 +96,7 @@ const std::vector<HistoryEntry>& WorkflowInstance::getHistory() const{
 
 void WorkflowInstance::complete(){
   this->status = WorkflowStatus::Approved;
+  UI_LOG("[WF] Workflow approved");
   notify(this, Outcome::Approved);   // Observer: tell everyone the workflow finished
 }
 
@@ -119,6 +122,7 @@ bool WorkflowInstance::isCancelled() const{
 void WorkflowInstance::reject(const std::string& nodeName){
   this->status = WorkflowStatus::Rejected;
   this->rejectedAt = nodeName;
+  UI_LOG("[WF] Workflow rejected at '" + nodeName + "'");
   notify(this, Outcome::Rejected);
 }
 

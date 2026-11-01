@@ -1,8 +1,8 @@
 #include "../inc/MessageSender.h"
-#include <iostream>
+#include "ui_logger.hpp"
 
 void MessageSender::send(const std::string& recipient, const std::string& subject, const std::string& body){
-  std::cout << "To: " << recipient << std::endl;
-    std::cout << "Subject: " << subject << std::endl;
-    std::cout << body << std::endl;
+    UI_LOG("[NOTIFY] To: " + recipient);
+    UI_LOG("[NOTIFY] Subject: " + subject);
+    UI_LOG("[NOTIFY] " + body);
 }

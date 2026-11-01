@@ -15,7 +15,7 @@ public:
     bool hasFields() const;
 
     // Builds the form from fields registered by DocumentBuilder::populateTUI.
-    // on_run_workflow is invoked after the user clicks Run workflow.
+    // on_run_workflow is invoked on a background thread after "Run Workflow".
     void run(std::function<void()> on_run_workflow);
 
 private:
@@ -23,4 +23,9 @@ private:
     std::vector<std::string> comparable_names_;
     std::map<std::string, std::string> common_values_;
     std::map<std::string, std::string> comparable_values_;
+};
+
+class TUIApp {
+public:
+    static int run();
 };

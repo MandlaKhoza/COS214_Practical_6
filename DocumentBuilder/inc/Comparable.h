@@ -1,3 +1,6 @@
+#ifndef COMPARABLE_H
+#define COMPARABLE_H
+
 #include <string>
 #include <iostream>
 
@@ -35,9 +38,11 @@ class Comparable {
                 else return false;
             }
 
-            std::cout << "Invalid operand for Comparable" << std::endl;
+            std::cerr << "Invalid operand for Comparable" << std::endl;
             return false;
         }
 
         std::string getKey() {return this->key;}
 };
+
+#endif

@@ -6,6 +6,7 @@
  * @date 2026-11-01
  */
 #include "../inc/ExternalCheckNode.h"
+#include "ui_logger.hpp"
 
 #include <exception>
 #include <string>
@@ -40,11 +41,13 @@ ExternalCheckNode::ExternalCheckNode(std::string name, std::shared_ptr<ExternalC
  *         "Credit check: Credit score 590 below minimum 650".
  */
 NodeResult ExternalCheckNode::process(WorkflowInstance& instance) {
+    UI_LOG("[EXTERNAL] Running external check '" + getName() + "'...");
     NodeResult res;
 
     if (!check) {
         res.result = HandleResult::FAILED;
         res.name = getName() + ": no external check configured";
+        UI_LOG("[EXTERNAL] " + res.name);
         return res;
     }
 
@@ -52,6 +55,7 @@ NodeResult ExternalCheckNode::process(WorkflowInstance& instance) {
     if (!document) {
         res.result = HandleResult::FAILED;
         res.name = getName() + ": no document to check";
+        UI_LOG("[EXTERNAL] " + res.name);
         return res;
     }
 
@@ -59,9 +63,11 @@ NodeResult ExternalCheckNode::process(WorkflowInstance& instance) {
         CheckResult r = check->run(*document);
         res.result = r.passed ? HandleResult::PASSED : HandleResult::REJECTED;
         res.name = getName() + ": " + r.message;
+        UI_LOG("[EXTERNAL] " + res.name);
     } catch (const std::exception& e) {
         res.result = HandleResult::FAILED;  // the external system broke, not a "no"
         res.name = getName() + ": check could not run (" + e.what() + ")";
+        UI_LOG("[EXTERNAL] " + res.name);
     }
     return res;
 }

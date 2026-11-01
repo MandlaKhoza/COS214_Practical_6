@@ -1,7 +1,7 @@
 #include "../inc/WorkflowNode.h"
 #include "../../State-pattern/inc/WaitingState.h"
 
-#include <iostream>
+#include "ui_logger.hpp"
 
 #include <exception>
 #include "../../WorkflowInstance/inc/WorkflowInstance.h"
@@ -35,6 +35,7 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
 
     instance.setCurrent(this);
 
+    UI_LOG("[WF] Executing node '" + getName() + "'");
     start();
 
     NodeResult nodeRes;
