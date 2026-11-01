@@ -6,6 +6,7 @@
  *       cancel() is inherited from NodeState: Pending is not final to Cancelled.
  */
 #include "PendingState.h"
+#include "WaitingState.h"
 #include "CancelledState.h"
 #include "PassedState.h"
 #include "RejectedState.h"
