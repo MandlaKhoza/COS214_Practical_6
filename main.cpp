@@ -30,6 +30,16 @@
 #include "CoR2/inc/ApprovalRequest.h"
 #include "CoR2/inc/RuleBasedApprover.h"
 
+#include "Factory/inc/Account.h"
+#include "Factory/inc/AccountFactory.h"
+#include "Factory/inc/GeneralAccountFactory.h"
+#include "Factory/inc/AccountRegistry.h"
+#include "Factory/inc/AccountView.h"
+#include "Factory/inc/AccountProxy.h"
+#include "Factory/inc/AccessLog.h"
+#include "Factory/inc/Requester.h"
+#include "Factory/inc/UserRole.h"
+
 #include "tui_app.hpp"
 #include "ui_logger.hpp"
 
@@ -65,6 +75,15 @@ static void logLine(const std::string& label, const std::string& value) {
     std::ostringstream oss;
     oss << std::left << std::setw(23) << label << value;
     UI_LOG("[WF] " + oss.str());
+}
+
+static void logAccountView(const std::string& label, const AccountView& view) {
+    UI_LOG("[PROXY] " + label);
+    std::istringstream details(view.display());
+    std::string line;
+    while (std::getline(details, line)) {
+        UI_LOG("[PROXY] " + line);
+    }
 }
 
 static std::unique_ptr<WorkflowNode> makeUniversityChain(
@@ -163,11 +182,25 @@ int TUIApp::run() {
         )
     ));
 
+    std::shared_ptr<AccountFactory> accountFactory(
+        new GeneralAccountFactory("STU-", FieldNames::EXAM_CANDIDATE_NUMBER)
+    );
+    std::shared_ptr<AccountRegistry> accountRegistry(new AccountRegistry());
+    std::shared_ptr<AccessLog> accessLog(new AccessLog());
+    unsigned int applicationCounter = 0;
+
     tui.run([&] {
         director.construct();
+        const std::string applicationNumber = std::to_string(++applicationCounter);
+
+        // Refresh university-assigned fields on every submission, including reruns.
+        std::map<std::string, std::string> fields = document->getCommon();
+        fields["studentNumber"] = "2026-" + applicationNumber;
+        fields["faculty"] = "Science";
+        document->setDocument(fields, document->getComparable());
 
         WorkflowInstance workflow(
-            "UNI-2026-001", "UniversityApplication", document
+            "UNI-2026-" + applicationNumber, "StudentApplication", document
         );
         workflow.setChain(makeUniversityChain(admissionRules, qualificationCheck, approvals));
 
@@ -197,6 +230,29 @@ int TUIApp::run() {
             observer->notificationCount() == 1 &&
             observer->received(Outcome::Approved)) {
             UI_LOG("[PASS] Application approved and observer notified exactly once");
+
+
+            std::unique_ptr<Account> account = accountFactory->create(workflow);
+            if (!account) {
+                UI_LOG("[FAIL] Application approved, but the factory could not create a student account");
+            } else {
+                const std::string accountNumber = account->getAccountNumber();
+                const std::string ownerId = account->getOwnerId();
+                accountRegistry->add(account.release());
+                UI_LOG("[FACTORY] Student account created: " + accountNumber);
+
+                // The student attemps to view their own account and a rando request ot view their account
+                AccountProxy studentView(accountRegistry, accountNumber,
+                    Requester(ownerId, UserRole::Client), accessLog);
+                logAccountView("Student viewing their own account:", studentView);
+
+                AccountProxy unrelatedView(accountRegistry, accountNumber,
+                    Requester(ownerId + "-other", UserRole::Client), accessLog);
+                logAccountView("Unrelated applicant requesting the same account:", unrelatedView);
+
+                UI_LOG("[PROXY] Total access attempts recorded: " +
+                       std::to_string(accessLog->getAttempts().size()));
+            }
         } else if (!workflow.isFinished()) {
             UI_LOG("[WF] Workflow has not finished; current node: " +
                    workflow.getCurrent()->getName());
