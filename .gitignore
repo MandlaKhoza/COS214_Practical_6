@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # build output
 build/
 *.o
@@ -8,3 +9,23 @@ tividy
 .idea/
 .vscode/
 .DS_Store
+=======
+# CMake build output
+build/
+
+# Doxygen generated output
+docs/html/
+docs/latex/
+
+# Compiled files
+*.o
+*.exe
+
+# IDE folders
+.vscode/
+.idea/
+>>>>>>> origin/feature/proxy-design-pattern_Markus
+
+# generated documentation
+docs/html/
+docs/latex/
