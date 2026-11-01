@@ -13,7 +13,7 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 list(FILTER SOURCES EXCLUDE REGEX "/tests/")
-list(FILTER SOURCES EXCLUDE REGEX "/build")
+list(FILTER SOURCES EXCLUDE REGEX "/(build|cmake-build[^/]*)/")
 # Explicit UI module (TUI/tui_app.cpp; assignment refers to this as src/ui)
 list(APPEND SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/TUI/tui_app.cpp")
 list(REMOVE_DUPLICATES SOURCES)

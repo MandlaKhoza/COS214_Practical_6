@@ -17,16 +17,25 @@
 
 namespace {
 
+const char* outcomeName(Outcome outcome) {
+    switch (outcome) {
+        case Outcome::Approved: return "Approved";
+        case Outcome::Rejected: return "Rejected";
+        case Outcome::Cancelled: return "Cancelled";
+        case Outcome::Failed: return "Failed";
+    }
+    return "Unknown";
+}
+
 class RecordingObserver : public WorkflowObserver {
 private:
     std::vector<Outcome> outcomes;
 
 public:
-    void onWorkflowFinished(WorkflowInstance&, Outcome outcome) override {
+    void onWorkflowFinished(WorkflowInstance& workflow, Outcome outcome) override {
         outcomes.push_back(outcome);
-        std::ostringstream oss;
-        oss << "[WF] Observer notified with outcome " << static_cast<int>(outcome);
-        UI_LOG(oss.str());
+        UI_LOG("[OBSERVER] RecordingObserver received " + std::string(outcomeName(outcome)) +
+               " for workflow '" + workflow.getId() + "'");
     }
 
     std::size_t notificationCount() const {
@@ -122,6 +131,18 @@ void WorkflowFacade::submitApplication() {
     logLine("Applicant fields:", "copied from Document Builder");
     logLine("Workflow:", workflow.getId());
     workflow.run();
+
+    if (workflow.isFinished() || workflow.isCancelled()) {
+        const Outcome expected = workflow.isFailed() ? Outcome::Failed
+            : workflow.isCancelled() ? Outcome::Cancelled
+            : !workflow.getRejectedAt().empty() ? Outcome::Rejected
+            : Outcome::Approved;
+        const bool notifiedOnce = observer->notificationCount() == 1 && observer->received(expected);
+        UI_LOG(std::string(notifiedOnce ? "[PASS] " : "[FAIL] ") +
+               "Observer notification check for " + outcomeName(expected) +
+               ": received " + std::to_string(observer->notificationCount()) +
+               " notification(s), expected exactly one with the matching outcome");
+    }
 
     UI_LOG("[WF] NODE RESULTS");
     for (WorkflowNode* node = workflow.getChain(); node; node = node->getNext()) {
