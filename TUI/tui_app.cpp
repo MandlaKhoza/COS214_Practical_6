@@ -103,7 +103,7 @@ ftxui::Elements render_logs(bool last_eight) {
     return log_elements;
 }
 
-} // namespace
+}
 
 void TUI::run(std::function<void()> on_run_workflow, const std::string& title) {
     using namespace ftxui;
@@ -192,7 +192,7 @@ void TUI::run(std::function<void()> on_run_workflow, const std::string& title) {
         });
     });
 
-    // Console scrolling
+
     std::vector<std::string> console_logs;
     int console_selected = 0;
     bool console_initialized = false;
