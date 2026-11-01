@@ -7,7 +7,7 @@ make test
 
 This builds and runs:
 - GeneralAccountFactory tests
-- FinanceAccountFactory tests 
+- FinanceAccountFactory tests
 
 2. RUN ONLY GENERAL ACCOUNT FACTORY TESTS
 ------------------------------------------
