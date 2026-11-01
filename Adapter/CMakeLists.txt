@@ -36,7 +36,7 @@ add_library(adapter
     src/QualificationAdapter.cpp
     src/FraudCheckAdapter.cpp
 )
-target_include_directories(adapter PUBLIC src)
+target_include_directories(adapter PUBLIC inc tests/support)
 target_compile_options(adapter PRIVATE -Wall -Wextra)
 
 # ---- Unit tests -----------------------------------------------------------------
