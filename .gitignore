@@ -1,6 +1,10 @@
+# build output
+build/
 *.o
 *.d
 tividy
-*.o
-*.d
-tividy
+
+# editor and macOS files
+.idea/
+.vscode/
+.DS_Store
