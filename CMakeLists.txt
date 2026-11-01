@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.14)
 project(tui_app LANGUAGES CXX)
 
 # FTXUI v5 requires C++17; application code remains compatible with C++11 style.
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -32,10 +32,10 @@ FetchContent_MakeAvailable(ftxui)
 find_package(Threads REQUIRED)
 
 # Create executable
-add_executable(my_app ${SOURCES})
+add_executable(Tividy ${SOURCES})
 
 # Include directories
-target_include_directories(my_app PRIVATE
+target_include_directories(Tividy PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/TUI
     ${CMAKE_CURRENT_SOURCE_DIR}/DocumentBuilder
@@ -52,7 +52,7 @@ target_include_directories(my_app PRIVATE
 )
 
 # Link FTXUI
-target_link_libraries(my_app PRIVATE
+target_link_libraries(Tividy PRIVATE
     Threads::Threads
     ftxui::screen
     ftxui::dom

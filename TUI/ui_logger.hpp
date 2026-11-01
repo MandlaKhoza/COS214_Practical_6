@@ -41,7 +41,7 @@ public:
             logs_.push_back(msg);
 
             // Ring Buffer Cap: Keep memory usage low
-            if (logs_.size() > 100) {
+            if (logs_.size() > 200) {
                 logs_.erase(logs_.begin());
             }
         }

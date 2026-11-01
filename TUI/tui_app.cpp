@@ -8,6 +8,7 @@
 #include <ftxui/dom/elements.hpp>
 
 #include <atomic>
+#include <algorithm>
 #include <exception>
 #include <string>
 #include <thread>
@@ -191,11 +192,43 @@ void TUI::run(std::function<void()> on_run_workflow, const std::string& title) {
         });
     });
 
-    auto tab2 = Renderer([&] {
+    // Console scrolling
+    std::vector<std::string> console_logs;
+    int console_selected = 0;
+    bool console_initialized = false;
+
+    MenuOption option;
+
+    option.entries_option.transform = [](const EntryState& state) {
+        Element entry = render_log_line(state.label);
+
+        if (state.focused) {
+            entry = entry | inverted;
+        }
+
+        return entry;
+    };
+
+    auto console_menu = Menu(&console_logs, &console_selected, option);
+
+    auto tab2 = Renderer(console_menu, [&] {
+        console_logs = UILogger::instance().get_logs();
+
+        if (!console_initialized && !console_logs.empty()) {
+            console_selected = static_cast<int>(console_logs.size()) - 1;
+            console_initialized = true;
+        }
+
+        if (console_logs.empty()) {
+            console_selected = 0;
+        } else if (console_selected >= static_cast<int>(console_logs.size())) {
+            console_selected = static_cast<int>(console_logs.size()) - 1;
+        }
+
         return vbox({
             text(" System Output Console ") | bold | bgcolor(Color::Blue),
             separator(),
-            vbox(render_logs(false)) | yframe | vscroll_indicator | flex
+            console_menu->Render() | vscroll_indicator | frame | flex
         }) | border | flex;
     });
 
