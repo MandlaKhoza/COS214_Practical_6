@@ -256,7 +256,7 @@ void runUniversityApplicationDemo() {
         }
     );
 
-    // Local exam-board stub: no real external service is contacted.
+    // ExamBoard(ExamBoardAPI) holds ExamRecord
     std::shared_ptr<ExamBoardAPI> examBoard(new ExamBoardAPI());
     examBoard->addRecord(ExamRecord{
         "EXAM-2026-001",
@@ -267,6 +267,7 @@ void runUniversityApplicationDemo() {
         }
     });
 
+    // qualificationCheck -> QualtificationAdapter holds examBoard and requiredMark
     std::shared_ptr<ExternalCheck> qualificationCheck(
         new QualificationAdapter(
             examBoard,
@@ -278,13 +279,14 @@ void runUniversityApplicationDemo() {
         )
     );
 
-    // Initial eligibility requires APS >= 30.
+    // Requires APS >= 30. Comparable for APS
     std::vector<std::shared_ptr<Comparable> > admissionRules;
     admissionRules.push_back(std::shared_ptr<Comparable>(
         new Comparable(FieldNames::APS, 30.0, ">=")
     ));
 
-    // The faculty applies a stricter selection requirement: APS >= 35.
+    // The faculty applies a stricter selection requirement: APS >= 35
+    // Human Approval Chain
     std::shared_ptr<ApprovalChain> approvals(
         new ApprovalChain(ApprovalPolicy::SequentialSignOff)
     );
@@ -310,15 +312,20 @@ void runUniversityApplicationDemo() {
         )
     ));
 
+    //////  Workflow Node creation  //////
+    // COMPLETIONCHECK 
     std::unique_ptr<WorkflowNode> completion(
         new DocCompletionCheckNode("ApplicationCompletion")
     );
+    // RANGECHECK
     std::unique_ptr<WorkflowNode> eligibility(
         new RangeCheckNode("MinimumAPS", admissionRules)
     );
+    // EXTERNAL QUALIFICATION CHECK
     std::unique_ptr<WorkflowNode> qualifications(
         new ExternalCheckNode("VerifiedQualifications", qualificationCheck)
     );
+    // HUMAN APPROVAL
     std::unique_ptr<WorkflowNode> faculty(
         new ApprovalNode("FacultyApproval", approvals)
     );
@@ -333,6 +340,7 @@ void runUniversityApplicationDemo() {
     );
     workflow.setChain(std::move(completion));
 
+    // OBSERVER
     std::shared_ptr<RecordingObserver> observer(new RecordingObserver());
     workflow.attach(observer);
 
@@ -343,7 +351,7 @@ void runUniversityApplicationDemo() {
     workflow.run();
 
     std::cout << "\n  NODE RESULTS\n";
-    Test::nodeStates(workflow.getChain());
+    Test::nodeStates(workflow.getChain()); // Uses Test nodeStates printer
 
     for (WorkflowNode* node = workflow.getChain();
          node;
