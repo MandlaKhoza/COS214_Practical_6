@@ -20,5 +20,8 @@ void NotificationObserver::onWorkflowFinished(WorkflowInstance& wi, Outcome out)
     if(out == Outcome::Rejected){
         return "Your application " + wi.getId() + " was rejected at " + wi.getRejectedAt() + ".";
     }
+    if(out == Outcome::Failed){
+        return "Your application " + wi.getId() + " failed due to a technical error.";
+    }
         return "Your application " + wi.getId() + " was unfortunately cancelled.";
 }

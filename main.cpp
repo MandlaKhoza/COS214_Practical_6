@@ -67,15 +67,8 @@ static void logLine(const std::string& label, const std::string& value) {
     UI_LOG("[WF] " + oss.str());
 }
 
-static std::vector<std::shared_ptr<Comparable> > admissionRules() {
-    std::vector<std::shared_ptr<Comparable> > rules;
-    rules.push_back(std::shared_ptr<Comparable>(
-        new Comparable(FieldNames::APS, 30.0, ">=")
-    ));
-    return rules;
-}
-
 static std::unique_ptr<WorkflowNode> makeUniversityChain(
+    const std::vector<std::shared_ptr<Comparable> >& admissionRules,
     std::shared_ptr<ExternalCheck> qualificationCheck,
     std::shared_ptr<ApprovalChain> approvals)
 {
@@ -83,7 +76,7 @@ static std::unique_ptr<WorkflowNode> makeUniversityChain(
         new DocCompletionCheckNode("ApplicationCompletion")
     );
     std::unique_ptr<WorkflowNode> eligibility(
-        new RangeCheckNode("MinimumAPS", admissionRules())
+        new RangeCheckNode("AdmissionAPS", admissionRules)
     );
     std::unique_ptr<WorkflowNode> qualifications(
         new ExternalCheckNode("VerifiedQualifications", qualificationCheck)
@@ -111,12 +104,16 @@ int TUIApp::run() {
     commonFields.push_back(FieldNames::EMAIL);
     commonFields.push_back(FieldNames::PROGRAMME);
     commonFields.push_back(FieldNames::EXAM_CANDIDATE_NUMBER);
-    commonFields.push_back(FieldNames::ID_COPY);
-    commonFields.push_back(FieldNames::CERTIFIED_RESULTS);
+
+
 
     std::vector<std::shared_ptr<Comparable> > comparableFields;
     comparableFields.push_back(std::shared_ptr<Comparable>(
-        new Comparable(FieldNames::APS, 0.0, ">=")
+        new Comparable(FieldNames::APS, 35.0, ">=")
+    ));
+    std::vector<std::shared_ptr<Comparable> > admissionRules = comparableFields;
+    admissionRules.push_back(std::shared_ptr<Comparable>(
+        new Comparable(FieldNames::APS, 42.0, "<=")
     ));
 
     Director director(&builder, commonFields, comparableFields);
@@ -128,6 +125,15 @@ int TUIApp::run() {
         "Naledi Mokoena",
         {
             {"Mathematics", 75},
+            {"English", 68}
+        }
+    });
+
+    examBoard->addRecord(ExamRecord{
+        "EXAM-2026-002",
+        "Thabo Dlamini",
+        {
+            {"Mathematics", 55},
             {"English", 68}
         }
     });
@@ -150,19 +156,9 @@ int TUIApp::run() {
         new RuleBasedApprover(
             "Science Faculty",
             "Admissions Committee",
-            [](const ApprovalRequest& request) {
-                double aps = 0.0;
-
-                const bool accepted =
-                    request.instance &&
-                    request.instance->getDocument() &&
-                    request.instance->getDocument()->getNumber(
-                        FieldNames::APS, aps) &&
-                    aps >= 35.0;
-
-                return accepted
-                    ? ApprovalDecision::Approved
-                    : ApprovalDecision::Rejected;
+            [](const ApprovalRequest&) {
+                // Earlier nodes enforce eligibility; faculty sign-off is the popup decision.
+                return ApprovalDecision::Approved;
             }
         )
     ));
@@ -173,7 +169,7 @@ int TUIApp::run() {
         WorkflowInstance workflow(
             "UNI-2026-001", "UniversityApplication", document
         );
-        workflow.setChain(makeUniversityChain(qualificationCheck, approvals));
+        workflow.setChain(makeUniversityChain(admissionRules, qualificationCheck, approvals));
 
         std::shared_ptr<RecordingObserver> observer(new RecordingObserver());
         workflow.attach(observer);
@@ -190,15 +186,22 @@ int TUIApp::run() {
             UI_LOG("[WF]   " + node->getName() + " -> " + node->getStateName());
         }
 
-        if (workflow.isFinished() &&
-            workflow.getRejectedAt().empty() &&
+        if (workflow.isFailed()) {
+            UI_LOG("[FAIL] Technical failure at " + workflow.getCurrent()->getName() +
+                   "; the application was not rejected on admission criteria");
+        } else if (!workflow.getRejectedAt().empty()) {
+            UI_LOG("[FAIL] Workflow rejected at " + workflow.getRejectedAt());
+        } else if (workflow.isCancelled()) {
+            UI_LOG("[WF] Workflow cancelled");
+        } else if (workflow.isFinished() &&
             observer->notificationCount() == 1 &&
             observer->received(Outcome::Approved)) {
             UI_LOG("[PASS] Application approved and observer notified exactly once");
-        } else if (workflow.getRejectedAt().empty()) {
-            UI_LOG("[WF] Workflow finished without a rejection node");
+        } else if (!workflow.isFinished()) {
+            UI_LOG("[WF] Workflow has not finished; current node: " +
+                   workflow.getCurrent()->getName());
         } else {
-            UI_LOG("[FAIL] Workflow rejected at " + workflow.getRejectedAt());
+            UI_LOG("[FAIL] Workflow finished, but the expected observer notification was missing");
         }
 
         UI_LOG("[WF] APPLICATION HISTORY");

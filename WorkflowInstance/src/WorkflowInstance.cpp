@@ -10,6 +10,7 @@ std::string statusName(WorkflowStatus s) {
         case WorkflowStatus::Approved:  return "Approved";
         case WorkflowStatus::Rejected:  return "Rejected";
         case WorkflowStatus::Cancelled: return "Cancelled";
+        case WorkflowStatus::Failed:    return "Failed";
     }
     return "Unknown";
 }
@@ -105,8 +106,18 @@ void WorkflowInstance::cancel(){
   notify(this, Outcome::Cancelled);
 }
 
+void WorkflowInstance::fail(){
+  this->status = WorkflowStatus::Failed;
+  if(current){
+    UI_LOG("[WF] Workflow failed at '" + current->getName() + "'");
+  } else {
+    UI_LOG("[WF] Workflow failed");
+  }
+  notify(this, Outcome::Failed);
+}
+
 bool WorkflowInstance::isFinished() const{
-  if(this->status == WorkflowStatus::Approved || this->status == WorkflowStatus::Rejected){
+  if(this->status == WorkflowStatus::Approved || this->status == WorkflowStatus::Rejected || this->status == WorkflowStatus::Failed){
     return true;
   } 
   return false;
@@ -117,6 +128,10 @@ bool WorkflowInstance::isCancelled() const{
     return true;
   }
   return false;
+}
+
+bool WorkflowInstance::isFailed() const{
+  return this->status == WorkflowStatus::Failed;
 }
 
 void WorkflowInstance::reject(const std::string& nodeName){

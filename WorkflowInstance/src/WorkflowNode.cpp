@@ -45,6 +45,7 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
     catch (const std::exception& e){
         fail();
         instance.addHistory(getName(), e.what());
+        instance.fail();
 
         return HandleResult::FAILED;
     }
@@ -52,7 +53,11 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
     switch(nodeRes.result){
 
         case HandleResult::PASSED:
-            pass();
+            if(getStateName() == "Pending"){
+                approve();
+            } else {
+                pass();
+            }
             instance.addHistory(getName(), nodeRes.name);
 
             // Automatically execute the next node.
@@ -79,6 +84,7 @@ HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
         case HandleResult::FAILED:
             fail();
             instance.addHistory(getName(), nodeRes.name);
+            instance.fail();
             return HandleResult::FAILED;
 
         case HandleResult::CANCELLED:

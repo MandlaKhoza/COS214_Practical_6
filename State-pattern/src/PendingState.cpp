@@ -10,6 +10,7 @@
 #include "CancelledState.h"
 #include "PassedState.h"
 #include "RejectedState.h"
+#include "FailedState.h"
 #include "WorkflowNode.h"
 #include <memory>
 
@@ -33,6 +34,10 @@ void PendingState::approve(WorkflowNode& node) {
  * */
 void PendingState::reject(WorkflowNode& node) {
     node.setState(std::unique_ptr<NodeState>(new RejectedState()));
+}
+
+void PendingState::fail(WorkflowNode& node) {
+    node.setState(std::unique_ptr<NodeState>(new FailedState()));
 }
 /**
  * @param node this would be the current node to where the state must be changed

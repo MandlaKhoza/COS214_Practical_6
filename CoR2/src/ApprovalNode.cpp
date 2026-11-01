@@ -37,15 +37,6 @@ std::unique_ptr<WorkflowNode> ApprovalNode::clone() {
 
 NodeResult ApprovalNode::process(WorkflowInstance& wi)
 {
-    UI_LOG("[APPROVAL] Awaiting human approval before continuing the chain...");
-    const bool humanApproved = ApprovalPrompt::instance().waitForDecision(
-        "ApprovalNode '" + getName() + "' needs a Yes/No decision."
-    );
-    if (!humanApproved) {
-        UI_LOG("[APPROVAL] Human rejected the request");
-        return NodeResult{HandleResult::REJECTED, "Rejected by human operator"};
-    }
-    UI_LOG("[APPROVAL] Human approved; submitting to the approval chain");
 
     // Fail-safe: no chain configured means nobody can approve
     if (!approvals)
@@ -53,6 +44,17 @@ NodeResult ApprovalNode::process(WorkflowInstance& wi)
         UI_LOG("[APPROVAL] No approval chain configured");
         return NodeResult{HandleResult::REJECTED, "No approval chain configured"};
     }
+
+    needsApproval();
+    UI_LOG("[APPROVAL] Pending human approval before evaluating faculty rules...");
+    const bool humanApproved = ApprovalPrompt::instance().waitForDecision(
+        "ApprovalNode '" + getName() + "' requires your decision. Yes continues to the configured approval rules."
+    );
+    if (!humanApproved) {
+        UI_LOG("[APPROVAL] Human rejected the request");
+        return NodeResult{HandleResult::REJECTED, "Rejected by human operator"};
+    }
+    UI_LOG("[APPROVAL] Human approved; evaluating configured approval rules");
 
     ApprovalRequest request = approvals->submit(wi);
 
@@ -65,8 +67,10 @@ NodeResult ApprovalNode::process(WorkflowInstance& wi)
     // finalDecision is only ever Approved or Rejected
     if (request.finalDecision == ApprovalDecision::Approved)
     {
-        UI_LOG("[APPROVAL] Approved by " + request.decidedBy);
-        return NodeResult{HandleResult::PASSED, "Approved by " + request.decidedBy};
+
+        UI_LOG("[APPROVAL] Approved by " + request.decidedBy + " and human operator");
+        return NodeResult{HandleResult::PASSED,
+                          "Approved by " + request.decidedBy + " and human operator"};
     }
 
     if (request.decidedBy.empty())

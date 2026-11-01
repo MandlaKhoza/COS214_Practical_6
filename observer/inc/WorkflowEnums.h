@@ -9,6 +9,6 @@
 /**
  * @brief How a workflow instance finished.
  */
-enum class Outcome { Approved, Rejected, Cancelled };
+enum class Outcome { Approved, Rejected, Cancelled, Failed };
 
 #endif

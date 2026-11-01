@@ -3,12 +3,15 @@
 #include <map>
 #include <memory>
 #include <string>
+#include <stdexcept>
+#include <vector>
 
 #include "ApprovalNode.h"
 #include "ApprovalChain.h"
 #include "Approver.h"
 #include "WorkflowInstance.h"
 #include "Document.h"
+#include "WorkflowObserver.h"
 
 // Test double: always returns the decision it was given
 class FixedApprover : public Approver
@@ -34,7 +37,13 @@ class TestableApprovalNode : public ApprovalNode
         TestableApprovalNode(const std::string& n, std::shared_ptr<ApprovalChain> a)
             : ApprovalNode(n, a) {}
 
-        NodeResult callProcess(WorkflowInstance& wi) { return process(wi); }
+        NodeResult callProcess(WorkflowInstance& wi) {
+            if (getStateName() != "Waiting") {
+                reset();
+            }
+            start();
+            return process(wi);
+        }
 };
 
 static std::shared_ptr<WorkflowInstance> makeInstance()
@@ -159,6 +168,131 @@ TEST(ApprovalNodeTest, CloneSharesTheSameApprovalChain)
 
     // original node + clone each hold the chain
     EXPECT_EQ(before + 2, chain.use_count());
+}
+
+class OutcomeRecorder : public WorkflowObserver {
+public:
+    std::vector<Outcome> outcomes;
+
+    void onWorkflowFinished(WorkflowInstance&, Outcome outcome) override {
+        outcomes.push_back(outcome);
+    }
+};
+
+class ResultNode : public WorkflowNode {
+public:
+    ResultNode(const std::string& name, HandleResult result,
+               bool throwError = false, bool waitForApproval = false)
+        : WorkflowNode(name), result(result), throwError(throwError),
+          waitForApproval(waitForApproval) {}
+
+    std::unique_ptr<WorkflowNode> clone() override {
+        return std::unique_ptr<WorkflowNode>(
+            new ResultNode(getName(), result, throwError, waitForApproval));
+    }
+
+protected:
+    NodeResult process(WorkflowInstance&) override {
+        if (waitForApproval) {
+            needsApproval();
+        }
+        if (throwError) {
+            throw std::runtime_error("Service unavailable");
+        }
+        return NodeResult{result, "Test result"};
+    }
+
+private:
+    HandleResult result;
+    bool throwError;
+    bool waitForApproval;
+};
+
+TEST(ApprovalNodeTest, ApprovedPendingNodePassesAndContinuesTheWorkflow)
+{
+    std::shared_ptr<WorkflowInstance> wi = makeInstance();
+    std::shared_ptr<OutcomeRecorder> observer = std::make_shared<OutcomeRecorder>();
+    wi->attach(observer);
+    std::unique_ptr<WorkflowNode> approval(new ApprovalNode("Approval",
+        chainOf(ApprovalPolicy::SequentialSignOff,
+                new FixedApprover("Ann", "Clerk", ApprovalDecision::Approved))));
+    approval->setNext(std::unique_ptr<WorkflowNode>(new ResultNode("AfterApproval", PASSED)));
+    wi->setChain(std::move(approval));
+
+    wi->run();
+
+    EXPECT_EQ("Passed", wi->getChain()->getStateName());
+    EXPECT_EQ("Passed", wi->getChain()->getNext()->getStateName());
+    EXPECT_TRUE(wi->isFinished());
+    EXPECT_FALSE(wi->isFailed());
+    ASSERT_EQ(1u, observer->outcomes.size());
+    EXPECT_EQ(Outcome::Approved, observer->outcomes[0]);
+}
+
+TEST(WorkflowFailureTest, ReturnedFailureTerminatesWithoutRejectingOrContinuing)
+{
+    std::shared_ptr<WorkflowInstance> wi = makeInstance();
+    std::shared_ptr<OutcomeRecorder> observer = std::make_shared<OutcomeRecorder>();
+    wi->attach(observer);
+    std::unique_ptr<WorkflowNode> node(new ResultNode("ExternalService", FAILED));
+    node->setNext(std::unique_ptr<WorkflowNode>(new ResultNode("Unreached", PASSED)));
+    wi->setChain(std::move(node));
+
+    wi->run();
+
+    EXPECT_TRUE(wi->isFinished());
+    EXPECT_TRUE(wi->isFailed());
+    EXPECT_TRUE(wi->getRejectedAt().empty());
+    EXPECT_EQ("Failed", wi->getCurrent()->getStateName());
+    EXPECT_EQ("Waiting", wi->getChain()->getNext()->getStateName());
+    ASSERT_EQ(1u, observer->outcomes.size());
+    EXPECT_EQ(Outcome::Failed, observer->outcomes[0]);
+}
+
+TEST(WorkflowFailureTest, ThrownExceptionTerminatesAndNotifiesOnce)
+{
+    std::shared_ptr<WorkflowInstance> wi = makeInstance();
+    std::shared_ptr<OutcomeRecorder> observer = std::make_shared<OutcomeRecorder>();
+    wi->attach(observer);
+    wi->setChain(std::unique_ptr<WorkflowNode>(new ResultNode("ExternalService", PASSED, true)));
+
+    EXPECT_NO_THROW(wi->run());
+
+    EXPECT_TRUE(wi->isFinished());
+    EXPECT_TRUE(wi->isFailed());
+    EXPECT_TRUE(wi->getRejectedAt().empty());
+    EXPECT_EQ("Failed", wi->getCurrent()->getStateName());
+    ASSERT_EQ(1u, observer->outcomes.size());
+    EXPECT_EQ(Outcome::Failed, observer->outcomes[0]);
+}
+
+TEST(WorkflowFailureTest, ExceptionWhilePendingCanTransitionToFailed)
+{
+    std::shared_ptr<WorkflowInstance> wi = makeInstance();
+    wi->setChain(std::unique_ptr<WorkflowNode>(new ResultNode("HumanApproval", PASSED, true, true)));
+
+    EXPECT_NO_THROW(wi->run());
+
+    EXPECT_TRUE(wi->isFinished());
+    EXPECT_TRUE(wi->isFailed());
+    EXPECT_EQ("Failed", wi->getCurrent()->getStateName());
+}
+
+TEST(ApprovalNodeTest, PendingRejectionStopsTheWorkflow)
+{
+    std::shared_ptr<WorkflowInstance> wi = makeInstance();
+    std::shared_ptr<OutcomeRecorder> observer = std::make_shared<OutcomeRecorder>();
+    wi->attach(observer);
+    wi->setChain(std::unique_ptr<WorkflowNode>(new ResultNode("HumanApproval", REJECTED, false, true)));
+
+    wi->run();
+
+    EXPECT_TRUE(wi->isFinished());
+    EXPECT_FALSE(wi->isFailed());
+    EXPECT_EQ("HumanApproval", wi->getRejectedAt());
+    EXPECT_EQ("Rejected", wi->getCurrent()->getStateName());
+    ASSERT_EQ(1u, observer->outcomes.size());
+    EXPECT_EQ(Outcome::Rejected, observer->outcomes[0]);
 }
 
 TEST(ApprovalNodeTest, TwoInstancesGetIndependentHistories)

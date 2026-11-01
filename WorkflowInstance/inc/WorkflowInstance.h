@@ -22,7 +22,7 @@ struct HistoryEntry{
 #include "../../observer/inc/WorkflowSubject.h"
 
 /// @brief Where a workflow instance is in its life (the only definition in the project).
-enum class WorkflowStatus { Created, Running, Approved, Rejected, Cancelled };
+enum class WorkflowStatus { Created, Running, Approved, Rejected, Cancelled, Failed };
 
 // Subject of the Observer pattern: observers are told when the workflow finishes
 class WorkflowInstance : public WorkflowSubject {
@@ -55,8 +55,10 @@ public:
     const std::vector<HistoryEntry>& getHistory() const;
     void complete();
     void cancel();
+    void fail();
     bool isFinished() const;
     bool isCancelled() const;
+    bool isFailed() const;
     void reject(const std::string& nodeName); // EXTRA : Remove if unused
     void markRunning(); // Remove if unused
     const std::string& getRejectedAt() const;

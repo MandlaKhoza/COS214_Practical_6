@@ -162,7 +162,8 @@ void TUI::run(std::function<void()> on_run_workflow) {
             body.push_back(text("No fields registered. DocumentBuilder::populateTUI was not called.") | dim);
         } else {
             body.push_back(text("Fields created by DocumentBuilder. Fill them, then Run Workflow.") | dim);
-            body.push_back(text("Demo: examCandidateNumber=EXAM-2026-001, aps=36 (faculty requires 35).") | dim);
+            body.push_back(text("Demo: programme=BSc Computer Science, aps=36 (valid range: 35-42).") | dim);
+            body.push_back(text("Exam candidate: EXAM-2026-001 passes; EXAM-2026-002 fails Mathematics.") | dim);
             body.push_back(separator());
             body.push_back(form->Render() | flex);
         }
