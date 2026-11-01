@@ -1,0 +1,62 @@
+Internal ctest changing into directory: /home/zeeli/COS214/Pracs/Project/COS214_Practical_6/build
+Test project /home/zeeli/COS214/Pracs/Project/COS214_Practical_6/build
+      Start  1: ApproverTest.SequentialSingleApproverApproves
+ 1/28 Test  #1: ApproverTest.SequentialSingleApproverApproves .............................   Passed    0.00 sec
+      Start  2: ApproverTest.SequentialAllApproveEndsWithLastApprover
+ 2/28 Test  #2: ApproverTest.SequentialAllApproveEndsWithLastApprover .....................   Passed    0.00 sec
+      Start  3: ApproverTest.SequentialMiddleRejectionStopsTheChain
+ 3/28 Test  #3: ApproverTest.SequentialMiddleRejectionStopsTheChain .......................   Passed    0.00 sec
+      Start  4: ApproverTest.SequentialFirstRejectionLeavesOneRecord
+ 4/28 Test  #4: ApproverTest.SequentialFirstRejectionLeavesOneRecord ......................   Passed    0.00 sec
+      Start  5: ApproverTest.EscalationFirstApprovalStopsImmediately
+ 5/28 Test  #5: ApproverTest.EscalationFirstApprovalStopsImmediately ......................   Passed    0.00 sec
+      Start  6: ApproverTest.EscalationPassesUpUntilSomeoneApproves
+ 6/28 Test  #6: ApproverTest.EscalationPassesUpUntilSomeoneApproves .......................   Passed    0.00 sec
+      Start  7: ApproverTest.EscalationWithNoAuthorityLeftIsRejected
+ 7/28 Test  #7: ApproverTest.EscalationWithNoAuthorityLeftIsRejected ......................   Passed    0.00 sec
+      Start  8: ApproverTest.EscalationRejectionStopsEvenIfLaterWouldApprove
+ 8/28 Test  #8: ApproverTest.EscalationRejectionStopsEvenIfLaterWouldApprove ..............   Passed    0.00 sec
+      Start  9: ApproverTest.NewRequestStartsRejectedAndEmpty
+ 9/28 Test  #9: ApproverTest.NewRequestStartsRejectedAndEmpty .............................   Passed    0.00 sec
+      Start 10: ApproverTest.EveryRecordHasAComment
+10/28 Test #10: ApproverTest.EveryRecordHasAComment .......................................   Passed    0.00 sec
+      Start 11: ApproverTest.ApproveReturnsTheSameValueAsFinalDecision
+11/28 Test #11: ApproverTest.ApproveReturnsTheSameValueAsFinalDecision ....................   Passed    0.00 sec
+      Start 12: ApproverTest.RecordsKeepChainOrderWithNamesRolesAndDecisions
+12/28 Test #12: ApproverTest.RecordsKeepChainOrderWithNamesRolesAndDecisions ..............   Passed    0.00 sec
+      Start 13: ApproverTest.SetNextReturnsTheAddedApproverAndChainCanBeWalked
+13/28 Test #13: ApproverTest.SetNextReturnsTheAddedApproverAndChainCanBeWalked ............   Passed    0.00 sec
+      Start 14: RuleBasedApproverTest.ReturnsWhatItsRuleReturns
+14/28 Test #14: RuleBasedApproverTest.ReturnsWhatItsRuleReturns ...........................   Passed    0.00 sec
+      Start 15: RuleBasedApproverTest.EmptyRuleFailsSafeToRejected
+15/28 Test #15: RuleBasedApproverTest.EmptyRuleFailsSafeToRejected ........................   Passed    0.00 sec
+      Start 16: RuleBasedApproverTest.RuleCanReadTheRequest
+16/28 Test #16: RuleBasedApproverTest.RuleCanReadTheRequest ...............................   Passed    0.00 sec
+      Start 17: ThresholdApproverTest.ValueBelowLimitIsApproved
+17/28 Test #17: ThresholdApproverTest.ValueBelowLimitIsApproved ...........................   Passed    0.00 sec
+      Start 18: ThresholdApproverTest.ValueEqualToLimitIsApproved
+18/28 Test #18: ThresholdApproverTest.ValueEqualToLimitIsApproved .........................   Passed    0.00 sec
+      Start 19: ThresholdApproverTest.ZeroIsAValidValueAndApproved
+19/28 Test #19: ThresholdApproverTest.ZeroIsAValidValueAndApproved ........................   Passed    0.00 sec
+      Start 20: ThresholdApproverTest.ValueAboveLimitEscalatesAndEndsRejectedWithNoNext
+20/28 Test #20: ThresholdApproverTest.ValueAboveLimitEscalatesAndEndsRejectedWithNoNext ...   Passed    0.00 sec
+      Start 21: ThresholdApproverTest.AboveLimitIsPassedUpToAHigherAuthority
+21/28 Test #21: ThresholdApproverTest.AboveLimitIsPassedUpToAHigherAuthority ..............   Passed    0.00 sec
+      Start 22: ThresholdApproverTest.AboveEveryLimitIsRejected
+22/28 Test #22: ThresholdApproverTest.AboveEveryLimitIsRejected ...........................   Passed    0.00 sec
+      Start 23: ThresholdApproverTest.MissingFieldIsRejected
+23/28 Test #23: ThresholdApproverTest.MissingFieldIsRejected ..............................   Passed    0.00 sec
+      Start 24: ThresholdApproverTest.MissingFieldDoesNotEscalateToALaterApprover
+24/28 Test #24: ThresholdApproverTest.MissingFieldDoesNotEscalateToALaterApprover .........   Passed    0.00 sec
+      Start 25: ThresholdApproverTest.TextFieldIsNotTreatedAsANumber
+25/28 Test #25: ThresholdApproverTest.TextFieldIsNotTreatedAsANumber ......................   Passed    0.00 sec
+      Start 26: ThresholdApproverTest.DifferentFieldNameIsUsed
+26/28 Test #26: ThresholdApproverTest.DifferentFieldNameIsUsed ............................   Passed    0.00 sec
+      Start 27: ThresholdApproverTest.NullInstanceIsRejected
+27/28 Test #27: ThresholdApproverTest.NullInstanceIsRejected ..............................   Passed    0.00 sec
+      Start 28: ThresholdApproverTest.SequentialSignOffNeedsEveryLevelWithinItsLimit
+28/28 Test #28: ThresholdApproverTest.SequentialSignOffNeedsEveryLevelWithinItsLimit ......   Passed    0.00 sec
+
+100% tests passed, 0 tests failed out of 28
+
+Total Test time (real) =   0.09 sec

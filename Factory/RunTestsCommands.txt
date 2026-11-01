@@ -1,0 +1,26 @@
+TIVIDY FACTORY TEST COMMANDS
+============================
+
+1. RUN BOTH TEST SUITES
+----------------------
+make test
+
+This builds and runs:
+- GeneralAccountFactory tests
+- FinanceAccountFactory tests
+
+2. RUN ONLY GENERAL ACCOUNT FACTORY TESTS
+------------------------------------------
+make test-general
+
+3. RUN ONLY FINANCE FACTORY TESTS
+---------------------------------
+make test-finance
+
+4. CHECK C++11 SRANDARD ADHERANCE
+-----------------------------------
+make check-cxx11
+
+5. CLEAN GENERATED TEST EXECUTABLES
+-----------------------------------
+make clean
