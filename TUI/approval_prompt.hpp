@@ -7,9 +7,7 @@
 #include <mutex>
 #include <string>
 
-// Blocks a workflow worker until the TUI modal records Yes/No.
-// When no FTXUI screen is attached (unit tests / headless), waitForDecision
-// returns true so existing ApprovalChain tests keep running.
+
 class ApprovalPrompt {
 public:
     static ApprovalPrompt& instance() {
