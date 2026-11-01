@@ -143,6 +143,7 @@ void TUI::run(std::function<void()> on_run_workflow, const std::string& title) {
             return;
         }
         join_worker();
+        UILogger::instance().clear();
         UI_LOG("[TUI] Run Workflow clicked — copying TUI values into the Document.");
         worker = std::thread([&] {
             try {
