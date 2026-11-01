@@ -18,16 +18,14 @@ struct HistoryEntry{
     std::string message;
 };
 
-//Workflow status enum
-enum WorkflowStatus {
-    Created,
-    Running,
-    Approved,
-    Rejected,
-    Cancelled
-};
+#include "WorkflowEnums.h"    // Outcome (Observer pattern)
+#include "WorkflowSubject.h"
 
-class WorkflowInstance {
+/// @brief Where a workflow instance is in its life (the only definition in the project).
+enum class WorkflowStatus { Created, Running, Approved, Rejected, Cancelled };
+
+// Subject of the Observer pattern: observers are told when the workflow finishes
+class WorkflowInstance : public WorkflowSubject {
 private:
     std::string id;
     std::shared_ptr<Document> document;

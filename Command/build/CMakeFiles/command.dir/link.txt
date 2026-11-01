@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcommand.a CMakeFiles/command.dir/src/WorkflowController.cpp.o
-/usr/bin/ranlib libcommand.a

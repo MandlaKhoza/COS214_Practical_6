@@ -1,5 +1,19 @@
 #include "../inc/WorkflowInstance.h"
 
+namespace {
+/// @brief Readable name of a status, for the history.
+std::string statusName(WorkflowStatus s) {
+    switch (s) {
+        case WorkflowStatus::Created:   return "Created";
+        case WorkflowStatus::Running:   return "Running";
+        case WorkflowStatus::Approved:  return "Approved";
+        case WorkflowStatus::Rejected:  return "Rejected";
+        case WorkflowStatus::Cancelled: return "Cancelled";
+    }
+    return "Unknown";
+}
+}
+
 WorkflowInstance::WorkflowInstance(const std::string& id, const std::string& type, 
   std::shared_ptr<Document> document)
     : id(id), document(document), status(WorkflowStatus::Created), current(nullptr), type(type) {}
@@ -56,7 +70,7 @@ void WorkflowInstance::addHistory(const std::string& nodeName, const std::string
  HistoryEntry object;
  object.timestamp = "10:00"; //It's always 10:00, what do you mean?
  object.nodeName = nodeName;
- object.stateName = this->status; // Does enum convert to string?
+ object.stateName = statusName(this->status);
  object.message = message;
 
  this->history.push_back(object);
@@ -67,11 +81,13 @@ const std::vector<HistoryEntry>& WorkflowInstance::getHistory() const{
 }
 
 void WorkflowInstance::complete(){
-  this->status = WorkflowStatus::Approved; //There is no completed, this is the closest
+  this->status = WorkflowStatus::Approved;
+  notify(this, Outcome::Approved);   // Observer: tell everyone the workflow finished
 }
 
 void WorkflowInstance::cancel(){
   this->status = WorkflowStatus::Cancelled;
+  notify(this, Outcome::Cancelled);
 }
 
 bool WorkflowInstance::isFinished() const{
@@ -89,7 +105,9 @@ bool WorkflowInstance::isCancelled() const{
 }
 
 void WorkflowInstance::reject(const std::string& nodeName){
-  //Probably checks the names, will have to do later
+  this->status = WorkflowStatus::Rejected;
+  this->rejectedAt = nodeName;
+  notify(this, Outcome::Rejected);
 }
 
 void WorkflowInstance::markRunning(){
@@ -97,7 +115,7 @@ void WorkflowInstance::markRunning(){
 }
 
 const std::string& WorkflowInstance::getRejectedAt() const{
-  return this->id; //Call if you know if you want to know where it rejected
+  return this->rejectedAt;
 }
 
 

@@ -1,1 +1,0 @@
-/usr/bin/c++  -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_cancel_workflow.dir/tests/test_cancel_workflow.cpp.o -o test_cancel_workflow  libcommands.a lib/libgtest_main.a libcommand.a libteam.a lib/libgtest.a
