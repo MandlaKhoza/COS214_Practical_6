@@ -39,6 +39,16 @@ std::string TUI::getComparableValue(const std::string& name) const {
     return it == comparable_values_.end() ? "" : it->second;
 }
 
+void TUI::setValues(const std::map<std::string, std::string>& values) {
+    for (const auto& entry : values) {
+        if (common_values_.count(entry.first)) {
+            common_values_[entry.first] = entry.second;
+        } else if (comparable_values_.count(entry.first)) {
+            comparable_values_[entry.first] = entry.second;
+        }
+    }
+}
+
 bool TUI::hasFields() const {
     return !common_names_.empty() || !comparable_names_.empty();
 }
@@ -94,7 +104,7 @@ ftxui::Elements render_logs(bool last_eight) {
 
 } // namespace
 
-void TUI::run(std::function<void()> on_run_workflow) {
+void TUI::run(std::function<void()> on_run_workflow, const std::string& title) {
     using namespace ftxui;
 
     auto screen = ScreenInteractive::Fullscreen();
@@ -146,7 +156,7 @@ void TUI::run(std::function<void()> on_run_workflow) {
             UILogger::instance().request_redraw();
         });
     });
-    auto quit_button = Button(" Quit ", [&] {
+    auto quit_button = Button(" Close Scenario ", [&] {
         ApprovalPrompt::instance().answer(false);
         screen.Exit();
     });
@@ -162,8 +172,7 @@ void TUI::run(std::function<void()> on_run_workflow) {
             body.push_back(text("No fields registered. DocumentBuilder::populateTUI was not called.") | dim);
         } else {
             body.push_back(text("Fields created by DocumentBuilder. Fill them, then Run Workflow.") | dim);
-            body.push_back(text("Demo: programme=BSc Computer Science, aps=36 (valid range: 35-42).") | dim);
-            body.push_back(text("Exam candidate: EXAM-2026-001 passes; EXAM-2026-002 fails Mathematics.") | dim);
+            body.push_back(text("Demo values are prefilled and editable. Close Scenario to continue or exit.") | dim);
             body.push_back(separator());
             body.push_back(form->Render() | flex);
         }
@@ -201,6 +210,8 @@ void TUI::run(std::function<void()> on_run_workflow) {
         return vbox({
             hbox({
                 text(" TIVIDY ") | bold | bgcolor(Color::Cyan) | color(Color::Black),
+                separator(),
+                text(" " + title + " ") | bold,
                 separator(),
                 tab_toggle->Render() | flex
             }),

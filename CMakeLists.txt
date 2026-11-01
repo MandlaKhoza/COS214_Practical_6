@@ -48,6 +48,7 @@ target_include_directories(my_app PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/observer/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/State-pattern/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/Factory/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Facade/inc
 )
 
 # Link FTXUI

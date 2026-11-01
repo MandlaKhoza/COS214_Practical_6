@@ -49,6 +49,14 @@ public:
         request_redraw();
     }
 
+    void clear() {
+        {
+            std::lock_guard<std::mutex> lock(mutex_);
+            logs_.clear();
+        }
+        request_redraw();
+    }
+
     // Retrieve logs for rendering (Thread-Safe)
     std::vector<std::string> get_logs() {
         std::lock_guard<std::mutex> lock(mutex_);

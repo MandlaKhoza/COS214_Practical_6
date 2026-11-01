@@ -13,10 +13,12 @@ public:
     std::string getComparableValue(const std::string& name) const;
 
     bool hasFields() const;
+    void setValues(const std::map<std::string, std::string>& values);
 
     // Builds the form from fields registered by DocumentBuilder::populateTUI.
     // on_run_workflow is invoked on a background thread after "Run Workflow".
-    void run(std::function<void()> on_run_workflow);
+    void run(std::function<void()> on_run_workflow,
+             const std::string& title = "Workflow");
 
 private:
     std::vector<std::string> common_names_;
