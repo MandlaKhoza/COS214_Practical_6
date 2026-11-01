@@ -3,6 +3,10 @@
 
 #include <iostream>
 
+#include <exception>
+#include "WorkflowInstance.h"
+#include "NodeResult.h"
+
 void WorkflowNode::setState(std::unique_ptr<NodeState> state) {
     this->state = std::move(state);
 }
@@ -24,47 +28,75 @@ WorkflowNode* WorkflowNode::getNext() {
 }
 
 HandleResult WorkflowNode::handle(WorkflowInstance& instance) {
-    // instance.setCurrent(this);
-    // instance.markRunning();
 
-    // NodeResult result = process(instance);
-    // recordHistory(instance, result);
+    if(instance.isCancelled()){
+        return HandleResult::CANCELLED;
+    }
 
-     // switch (res.result) {
-        // case HandleResult::PASSED:
-            // pass();
-            // if (next) return next->handle(instance);
-            // instance.complete();
-            // return HandleResult::PASSED;
-        // case HandleResult::REJECTED:
-        //     reject();
-            // instance.rejectNodeName(getName());
-            // return HandleResult::REJECTED;
-        // case HandleResult::FAILED:
-        //     fail();
-        //     return HandleResult::FAILED;
-        // case HandleResult::PENDING:
-            // needsApproval();   // stop; resume() will re-enter
-            // return HandleResult::PENDING;
-        // case HandleResult::CANCELLED:
-        //     cancel();
-            // instance.cancel();
-            // return HandleResult::CANCELLED;
-    // }
-  // }
-    NodeResult nodeRes = process(instance);
+    instance.setCurrent(this);
 
-    std::cout << nodeRes.name << " returned with result: " << nodeRes.result << std::endl;
+    start();
 
-    return nodeRes.result;
+    NodeResult nodeRes;
+    try{
+        nodeRes = process(instance);
+    }
+    catch (const std::exception& e){
+        fail();
+        instance.addHistory(getName(), e.what());
+
+        return HandleResult::FAILED;
+    }
+
+    switch(nodeRes.result){
+
+        case HandleResult::PASSED:
+            pass();
+            instance.addHistory(getName(), nodeRes.name);
+
+            // Automatically execute the next node.
+            if(next){
+                return next->handle(instance);
+            }
+            instance.complete();
+            return HandleResult::PASSED;
+
+
+        case HandleResult::REJECTED:
+            reject();
+            instance.reject(getName());
+            instance.addHistory(getName(), nodeRes.name);
+
+            return HandleResult::REJECTED;
+
+
+        case HandleResult::PENDING:
+            needsApproval();
+            instance.addHistory(getName(), nodeRes.name);
+            return HandleResult::PENDING;
+
+        case HandleResult::FAILED:
+            fail();
+            instance.addHistory(getName(), nodeRes.name);
+            return HandleResult::FAILED;
+
+        case HandleResult::CANCELLED:
+            cancel();
+            instance.cancel();
+            instance.addHistory(getName(), nodeRes.name);
+            return HandleResult::CANCELLED;
+    }
+
+    return HandleResult::FAILED;
 }
+
 
 NodeState* WorkflowNode::getState() {
     return this->state.get();
 }
 
 std::string WorkflowNode::getStateName() {
-    return this->state->getName();   // FIX 4: returning nullptr as a std::string crashes
+    return this->state->getName();
 }
 
 void WorkflowNode::start() {

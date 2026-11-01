@@ -13,13 +13,23 @@ using namespace std;
 
 CancelWorkflowCommand::CancelWorkflowCommand(WorkflowInstance* instance) : instance(instance) {}
 
-bool CancelWorkflowCommand::execute() {
-	if (!instance) return false;
+bool CancelWorkflowCommand::execute(){
+    if (!instance) return false;
 
-	instance->cancel();
+    if(instance->isFinished() || instance->isCancelled())
+        return false;
 
-	return true;
+    WorkflowNode* current = instance->getCurrent();
+
+    if(current){
+        current->cancel();
+    }
+
+    instance->cancel();
+
+    return true;
 }
+
 
 string CancelWorkflowCommand::describe() const {
 	return "Cancel workflow " + (instance ? instance->getId() : std::string("(none)"));

@@ -36,15 +36,27 @@ WorkflowNode* WorkflowInstance::getChain() const{
     return chain.get();
 }
 
-void WorkflowInstance::run(){
-  HandleResult result; //TODO double check
-  result = this->chain->handle(*this);
+void WorkflowInstance::run() {
+    if(!chain){
+        throw std::logic_error("Cannot run workflow: no chain configured");
+    }
+    markRunning();
+    chain->handle(*this);
 }
 
-void WorkflowInstance::resume(){
-//Most likely does the same as run
-  HandleResult result;
-  result = this->chain->handle(*this);
+void WorkflowInstance::resume() {
+    if(!current || current->getStateName() != "Passed"){
+        throw std::logic_error("Cannot resume: current node has not been approved");
+    }
+
+    WorkflowNode* next = current->getNext();
+    if(!next){
+        complete();
+        return;
+    }
+
+    markRunning();
+    next->handle(*this);
 }
 
 void WorkflowInstance::reset(){

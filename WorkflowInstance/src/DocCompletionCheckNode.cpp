@@ -9,7 +9,7 @@ NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi) {
     for (const auto& field : commonFields) {
         if (field.second.empty()) {
             return NodeResult{
-                HandleResult::FAILED,
+                HandleResult::REJECTED,
                 "Document not completed: empty field '" + field.first + "'"
             };
         }
@@ -18,7 +18,7 @@ NodeResult DocCompletionCheckNode::process(WorkflowInstance& wi) {
     for (const auto& field : comparableFields) {
         if (std::isnan(field.second)) {
             return NodeResult{
-                HandleResult::FAILED,
+                HandleResult::REJECTED,
                 "Document not completed: missing numeric field '" + field.first + "'"
             };
         }
