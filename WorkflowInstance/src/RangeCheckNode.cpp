@@ -33,7 +33,7 @@ NodeResult RangeCheckNode::process(WorkflowInstance& instance) {
         return res;
     }
     // else
-    res.result = HandleResult::FAILED;
+    res.result = HandleResult::REJECTED;
     return res;
 }
 
