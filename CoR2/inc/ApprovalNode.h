@@ -5,7 +5,7 @@
 #include <memory>
 #include <string>
 
-#include "WorkflowNode.h"
+#include "../../WorkflowInstance/inc/WorkflowNode.h"
 
 
 

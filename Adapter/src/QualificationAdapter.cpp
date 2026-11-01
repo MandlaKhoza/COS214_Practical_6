@@ -6,9 +6,9 @@
  */
 
 
-#include "QualificationAdapter.h"
+#include "../inc/QualificationAdapter.h"
 
-#include "Document.h"
+#include "../../DocumentBuilder/inc/Document.h"
 
 QualificationAdapter::QualificationAdapter(std::shared_ptr<ExamBoardAPI> api, const std::string& candidateField,
                                            const std::map<std::string, int>& requiredMarks)
@@ -19,7 +19,7 @@ CheckResult QualificationAdapter::run(const Document& doc) const{
 
 	if(!doc.getField(candidateField, candidateNo))
 		return CheckResult{false, "Missing field: " + candidateField, getName(), {}};
-	
+
 		//get results of candidate
 	std::map<std::string, int> results = api->getResults(candidateNo);
 	if (results.empty())

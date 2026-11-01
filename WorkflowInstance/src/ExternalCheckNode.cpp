@@ -12,8 +12,8 @@
 
 #include "../inc/NodeResult.h"
 #include "../inc/WorkflowInstance.h"
-#include "CheckResult.h"
-#include "ExternalCheck.h"
+#include "../../Adapter/inc/CheckResult.h"
+#include "../../Adapter/inc/ExternalCheck.h"
 
 /**
  * @brief Creates the node.

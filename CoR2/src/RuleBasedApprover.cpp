@@ -1,4 +1,4 @@
-#include "RuleBasedApprover.h"
+#include "../inc/RuleBasedApprover.h"
 
 RuleBasedApprover::RuleBasedApprover(const std::string& n, const std::string& ro, std::function<ApprovalDecision(const ApprovalRequest&)> ru) :
 Approver(n, ro), rule(ru)

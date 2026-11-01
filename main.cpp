@@ -23,6 +23,19 @@
 
 #include "observer/inc/WorkflowObserver.h"
 
+#include "WorkflowInstance/inc/ExternalCheckNode.h"
+
+#include "Adapter/inc/ExamBoardAPI.h"
+#include "Adapter/inc/ExamRecord.h"
+#include "Adapter/inc/FieldNames.h"
+#include "Adapter/inc/QualificationAdapter.h"
+
+#include "CoR2/inc/ApprovalNode.h"
+#include "CoR2/inc/ApprovalChain.h"
+#include "CoR2/inc/ApprovalRequest.h"
+#include "CoR2/inc/RuleBasedApprover.h"
+
+
 // ============================================================
 // TEST FRAMEWORK
 // ============================================================
@@ -97,6 +110,9 @@ namespace Test {
 // ============================================================
 // TEST SUPPORT CLASSES
 // ============================================================
+
+
+
 
 // A node that requests human approval.
 class ApprovalTestNode : public WorkflowNode {
@@ -221,7 +237,137 @@ std::unique_ptr<WorkflowNode> makeStandardChain() {
 
     return std::unique_ptr<WorkflowNode>(head.release());
 }
+void runUniversityApplicationDemo() {
+    Test::heading("16. UNIVERSITY APPLICATION SCENARIO");
 
+    // Fictional programme requirements for this demonstration.
+    std::shared_ptr<Document> application = makeDocument(
+        {
+            {FieldNames::NAME, "Naledi"},
+            {FieldNames::SURNAME, "Mokoena"},
+            {FieldNames::EMAIL, "naledi.mokoena@example.com"},
+            {FieldNames::PROGRAMME, "BSc Computer Science"},
+            {FieldNames::EXAM_CANDIDATE_NUMBER, "EXAM-2026-001"},
+            {FieldNames::ID_COPY, "certified-id.pdf"},
+            {FieldNames::CERTIFIED_RESULTS, "matric-results.pdf"}
+        },
+        {
+            {FieldNames::APS, 36.0}
+        }
+    );
+
+    // Local exam-board stub: no real external service is contacted.
+    std::shared_ptr<ExamBoardAPI> examBoard(new ExamBoardAPI());
+    examBoard->addRecord(ExamRecord{
+        "EXAM-2026-001",
+        "Naledi Mokoena",
+        {
+            {"Mathematics", 75},
+            {"English", 68}
+        }
+    });
+
+    std::shared_ptr<ExternalCheck> qualificationCheck(
+        new QualificationAdapter(
+            examBoard,
+            FieldNames::EXAM_CANDIDATE_NUMBER,
+            {
+                {"Mathematics", 60},
+                {"English", 50}
+            }
+        )
+    );
+
+    // Initial eligibility requires APS >= 30.
+    std::vector<std::shared_ptr<Comparable> > admissionRules;
+    admissionRules.push_back(std::shared_ptr<Comparable>(
+        new Comparable(FieldNames::APS, 30.0, ">=")
+    ));
+
+    // The faculty applies a stricter selection requirement: APS >= 35.
+    std::shared_ptr<ApprovalChain> approvals(
+        new ApprovalChain(ApprovalPolicy::SequentialSignOff)
+    );
+
+    approvals->setHead(std::unique_ptr<Approver>(
+        new RuleBasedApprover(
+            "Science Faculty",
+            "Admissions Committee",
+            [](const ApprovalRequest& request) {
+                double aps = 0.0;
+
+                const bool accepted =
+                    request.instance &&
+                    request.instance->getDocument() &&
+                    request.instance->getDocument()->getNumber(
+                        FieldNames::APS, aps) &&
+                    aps >= 35.0;
+
+                return accepted
+                    ? ApprovalDecision::Approved
+                    : ApprovalDecision::Rejected;
+            }
+        )
+    ));
+
+    std::unique_ptr<WorkflowNode> completion(
+        new DocCompletionCheckNode("ApplicationCompletion")
+    );
+    std::unique_ptr<WorkflowNode> eligibility(
+        new RangeCheckNode("MinimumAPS", admissionRules)
+    );
+    std::unique_ptr<WorkflowNode> qualifications(
+        new ExternalCheckNode("VerifiedQualifications", qualificationCheck)
+    );
+    std::unique_ptr<WorkflowNode> faculty(
+        new ApprovalNode("FacultyApproval", approvals)
+    );
+
+    // Assemble from the tail because each node owns its successor.
+    qualifications->setNext(std::move(faculty));
+    eligibility->setNext(std::move(qualifications));
+    completion->setNext(std::move(eligibility));
+
+    WorkflowInstance workflow(
+        "UNI-2026-001", "UniversityApplication", application
+    );
+    workflow.setChain(std::move(completion));
+
+    std::shared_ptr<RecordingObserver> observer(new RecordingObserver());
+    workflow.attach(observer);
+
+    Test::workflowLine("Applicant:", "Naledi Mokoena");
+    Test::workflowLine("Programme:", "BSc Computer Science");
+    Test::workflowLine("Workflow:", workflow.getId());
+
+    workflow.run();
+
+    std::cout << "\n  NODE RESULTS\n";
+    Test::nodeStates(workflow.getChain());
+
+    for (WorkflowNode* node = workflow.getChain();
+         node;
+         node = node->getNext()) {
+        Test::check(
+            node->getName() + " passed",
+            node->getStateName() == "Passed"
+        );
+    }
+
+    Test::check(
+        "Application approved and observer notified exactly once",
+        workflow.isFinished() &&
+        workflow.getRejectedAt().empty() &&
+        observer->notificationCount() == 1 &&
+        observer->received(Outcome::Approved)
+    );
+
+    std::cout << "\n  APPLICATION HISTORY\n";
+    for (const HistoryEntry& entry : workflow.getHistory()) {
+        std::cout << "    " << entry.nodeName
+                  << ": " << entry.message << "\n";
+    }
+}
 // ============================================================
 // MAIN
 // ============================================================
@@ -829,7 +975,7 @@ int main() {
             copy->getStateName() == "Waiting" &&
             copy->getNext()->getStateName() == "Waiting");
     }
-
+    runUniversityApplicationDemo();
     Test::summary();
 
     return Test::failed == 0 ? 0 : 1;

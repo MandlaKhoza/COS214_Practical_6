@@ -1,6 +1,6 @@
 
-#include "ApprovalChain.h"
-#include "WorkflowInstance.h"
+#include "../inc/ApprovalChain.h"
+#include "../../WorkflowInstance/inc/WorkflowInstance.h"
 #include <utility>
 
 /**

@@ -1,11 +1,11 @@
 #include "../inc/WorkflowNode.h"
-#include "WaitingState.h"
+#include "../../State-pattern/inc/WaitingState.h"
 
 #include <iostream>
 
 #include <exception>
-#include "WorkflowInstance.h"
-#include "NodeResult.h"
+#include "../../WorkflowInstance/inc/WorkflowInstance.h"
+#include "../inc/NodeResult.h"
 
 void WorkflowNode::setState(std::unique_ptr<NodeState> state) {
     this->state = std::move(state);

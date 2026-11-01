@@ -1,9 +1,9 @@
 
-#include "ApprovalNode.h"
-#include "ApprovalChain.h"
-#include "WorkflowInstance.h"
-#include "ApprovalRequest.h"
-#include "ApprovalDecision.h"
+#include "../inc/ApprovalNode.h"
+#include "../inc/ApprovalChain.h"
+#include "../../WorkflowInstance/inc/WorkflowInstance.h"
+#include "../inc/ApprovalRequest.h"
+#include "../inc/ApprovalDecision.h"
 
 
 /**

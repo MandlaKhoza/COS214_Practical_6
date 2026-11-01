@@ -1,4 +1,4 @@
-#include "Approver.h"
+#include "../inc/Approver.h"
 
 #include <utility>
 
@@ -39,7 +39,7 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
 
             return req.finalDecision;
 
-           
+
 
         break;
 
@@ -53,9 +53,9 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
                 message = "Request approved by "+ this->role + " " + this->name;
                 req.records.back().comment = message;
 
-                return req.finalDecision;  
+                return req.finalDecision;
 
-            } 
+            }
 
             else if (req.policy == ApprovalPolicy::SequentialSignOff)
             {
@@ -64,7 +64,7 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
                     message = "Request signed off by "+ this->role + " " + this->name;
                     req.records.back().comment = message;
 
-                    return this->next.get()->approve(req); 
+                    return this->next.get()->approve(req);
 
                 }
                 else
@@ -73,7 +73,7 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
                     req.decidedBy = this->name;
 
                     message = "Request approved by "+ this->role + " " + this->name;
-                    req.records.back().comment = message;       
+                    req.records.back().comment = message;
                 }
                 return req.finalDecision;
             }
@@ -81,19 +81,19 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
             {
                 return req.finalDecision;
             }
-            
+
 
         break;
 
         case ApprovalDecision::Escalate://Escalate
-            
+
             if(this->next != nullptr)
             {
 
                 message = "Request escalated by "+ this->role + " " + this->name;
                 req.records.back().comment = message;
 
-                return this->next.get()->approve(req); 
+                return this->next.get()->approve(req);
 
             }
             else
@@ -107,7 +107,7 @@ ApprovalDecision Approver::approve(ApprovalRequest& req)
             return req.finalDecision;
 
         break;
-        
+
         default:
 
             return ApprovalDecision::Rejected;
@@ -133,8 +133,3 @@ Approver* Approver::getNext() const
 {
     return this->next.get();
 }
-
-
-
-
-
