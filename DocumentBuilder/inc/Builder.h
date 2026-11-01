@@ -10,10 +10,11 @@
 
 class Builder {
 public:
-  virtual void populateTUI(std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields) = 0;
-  virtual void createMapComponents(std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields) = 0;
-  virtual void setMapValues() = 0;
-  virtual Document *getDocument() = 0;
+    virtual ~Builder() = default;
+    virtual void populateTUI(std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields) = 0;
+    virtual void createMapComponents(std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields) = 0;
+    virtual void setMapValues() = 0;
+    virtual Document *getDocument() = 0;
 };
 
 #endif // BUILDER_H

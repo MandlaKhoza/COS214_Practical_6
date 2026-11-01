@@ -6,9 +6,12 @@ Director::Director(Builder* builder, std::vector<std::string> commonFields, std:
     this->comparableFields = comparableFields;
 }
 
-Document* Director::construct() {
+void Director::prepare() {
     this->builder->populateTUI(this->commonFields, this->comparableFields);
     this->builder->createMapComponents(this->commonFields, this->comparableFields);
+}
+
+Document* Director::construct() {
     this->builder->setMapValues();
 
     return this->builder->getDocument();

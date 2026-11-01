@@ -16,6 +16,7 @@ private:
 
 public:
   Director(Builder *builder, std::vector<std::string> commonFields, std::vector<std::shared_ptr<Comparable>> comparableFields);
+  void prepare();
   Document *construct();
 };
 #endif // DIRECTOR_H
